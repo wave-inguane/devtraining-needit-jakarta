@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_58872_needit.MiniJakartaSS</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>MiniJakartaSS</name>
+        <script><![CDATA[var MiniJakartaSS = Class.create();
+MiniJakartaSS.prototype = {
+	initialize: function() {
+	},
+	//SS JSON data transfer works
+	//--------------------------------------crud-read-----------------------------------
+	//----------------------------------------------------------------------------------
+	read: function (inguaneDB, queryString, keyValueDataPair, classAndFunctionName) {
+		var brsemaphore = { x: 1 };
+			var gdt = new GlideDateTime();
+			gs.addInfoMessage("$SERVER$: Script Include { MiniJakartaSS  } Invoked By: " + classAndFunctionName.ClassName + " " + classAndFunctionName.FunctionName + " @  " + gdt);
+				inguaneDB.query();//needed to get the row count
+				gs.addInfoMessage("$SERVER$: AquireLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+				var myArray = [];
+				//AquireLock
+				this._P(brsemaphore);
+				inguaneDB.addEncodedQuery(queryString);
+				inguaneDB.query();
+				while (inguaneDB.next()) {
+					
+					var keyValuePair = { dataKey: "", dataValue: "" };
+						keyValuePair.dataKey = inguaneDB[keyValueDataPair.key];
+						keyValuePair.dataValue = inguaneDB[keyValueDataPair.value];
+						myArray.push(keyValuePair);
+						
+					}
+					//ReleaseLock
+					this._V(brsemaphore);
+					gs.addErrorMessage("$SERVER$: ReleaseLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+					return myArray;
+					
+				},
+				_readORIGINAL: function (inguaneDB, queryString, keyValueDataPair, classAndFunctionName) {
+					var brsemaphore = { x: 1 };
+						var gdt = new GlideDateTime();
+						gs.addInfoMessage("$SERVER$: Script Include { MiniJakartaSS  } Invoked By: " + classAndFunctionName.ClassName + " " + classAndFunctionName.FunctionName + " @  " + gdt);
+							inguaneDB.query();//needed to get the row count
+							gs.addInfoMessage("$SERVER$: AquireLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+							var myArray = [];
+							//AquireLock
+							this._P(brsemaphore);
+							inguaneDB.addEncodedQuery(queryString);
+							inguaneDB.query();
+							while (inguaneDB.next()) {
+								var keyValuePair = { dataKey: "", dataValue: "" };
+									keyValuePair.dataKey = keyValueDataPair.key;
+									keyValuePair.dataValue = inguaneDB.getDisplayValue(keyValueDataPair.value);
+									myArray.push(keyValuePair);
+								}
+								//ReleaseLock
+								this._V(brsemaphore);
+								gs.addErrorMessage("$SERVER$: ReleaseLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+								return myArray;
+								
+							},
+							//-------------------------------------crud create-----------------------------------------
+							//------------------------------------------------------------------------------------------
+							create: function (inguaneDB, properties, newValues,classAndFunctionName) {
+								var brsemaphore = { x: 1 };
+									
+									this._P(brsemaphore);//AquireLock
+									//do work
+									var gdt = new GlideDateTime();
+									
+									gs.addInfoMessage("$SERVER$: Script Include { MiniJakartaSS } Invoked By: " + classAndFunctionName.ClassName + " " + classAndFunctionName.FunctionName + " @  " + gdt);
+										inguaneDB.query();//needed to get the row count
+										gs.addInfoMessage("$SERVER$: AquireLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+										
+										//Create a new Incident record and populate the fields with the values below
+										inguaneDB.initialize();
+										this._goodjs(inguaneDB, properties, newValues);
+										inguaneDB.insert();
+										
+										inguaneDB.initialize();
+										inguaneDB.query();//needed to get the row count
+										//finished work
+										this._V(brsemaphore);//ReleaseLock
+										
+										
+										gs.addErrorMessage("$SERVER$: ReleaseLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+										
+									},
+									//--------------------------------------crud-update-----------------------------------
+									//------------------------------------------------------------------------------------
+									updateIt : function (inguaneDB, queryString,properties,newValues , classAndFunctionName) {
+										var brsemaphore = { x: 1 };
+											
+											this._P(brsemaphore);//AquireLock
+											//do work
+											var gdt = new GlideDateTime();
+											
+											gs.addInfoMessage("$SERVER$: Script Include { MiniJakartaSS } Invoked By: " + classAndFunctionName.ClassName + " " + classAndFunctionName.FunctionName + " @  " + gdt);
+												inguaneDB.query();//needed to get the row count
+												gs.addInfoMessage("$SERVER$: AquireLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+												
+												if(queryString.match(/sys_id/)){
+													//Delete single record
+													inguaneDB.addEncodedQuery(queryString);
+													inguaneDB.query();
+													this._goodjs(inguaneDB,properties,newValues);
+													
+													inguaneDB.update();
+												}else{
+													//Delete Multiple records
+													inguaneDB.addEncodedQuery(queryString);
+													inguaneDB.query();
+													while (inguaneDB.next()) {
+														this._goodjs(inguaneDB,properties,newValues);
+														inguaneDB.update();
+													}
+												}
+												
+												inguaneDB.initialize();
+												inguaneDB.query();//needed to get the row count
+												//finished work
+												this._V(brsemaphore);//ReleaseLock
+												
+												
+												gs.addErrorMessage("$SERVER$: ReleaseLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+												
+											},
+											//--------------------------------------crud-delete-----------------------------------
+											//------------------------------------------------------------------------------------
+											remove : function (inguaneDB, queryString, classAndFunctionName) {
+												var brsemaphore = { x: 1 };
+													
+													this._P(brsemaphore);//AquireLock
+													//do work
+													var gdt = new GlideDateTime();
+													
+													gs.addInfoMessage("$SERVER$: Script Include { MiniJakartaSS } Invoked By: " + classAndFunctionName.ClassName + " " + classAndFunctionName.FunctionName + " @  " + gdt);
+														inguaneDB.query();//needed to get the row count
+														gs.addInfoMessage("$SERVER$: AquireLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+														
+														if(queryString.match(/sys_id/)){
+															//Delete single record
+															inguaneDB.addEncodedQuery(queryString);
+															inguaneDB.query();
+															inguaneDB.next();
+															inguaneDB.deleteRecord();
+														}else{
+															//Delete Multiple records
+															inguaneDB.addEncodedQuery(queryString);
+															inguaneDB.query();
+															while (inguaneDB.next()) {
+																inguaneDB.deleteRecord();
+															}
+														}
+														
+														inguaneDB.initialize();
+														inguaneDB.query();//needed to get the row count
+														//finished work
+														this._V(brsemaphore);//ReleaseLock
+														
+														
+														gs.addErrorMessage("$SERVER$: ReleaseLock : " + brsemaphore.x + " TOTAL RECORDS : " + inguaneDB.getRowCount());
+														
+													},
+													_goodjs : function(inguaneDB,properties,newValues){
+														
+														for (i = 0; i < properties.length; i += 1) {
+															//gs.addErrorMessage(properties[i] + ': ' + inguaneDB[properties[i]]);
+															if((inguaneDB[properties[i]]!== undefined) ||
+																(inguaneDB[properties[i]] === null))
+															inguaneDB[properties[i]] = newValues[i] ;
+														}
+														
+													},
+													
+													_P: function (sem) {
+														while (sem.x <= 0);
+															sem.x--;
+													},
+													_V: function (sem) {
+														sem.x++;
+													},
+													
+													type: 'MiniJakartaSS'
+												};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-09-28 04:22:23</sys_created_on>
+        <sys_id>2e167b5c4f6d03003b564ea18110c7c8</sys_id>
+        <sys_mod_count>42</sys_mod_count>
+        <sys_name>MiniJakartaSS</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_2e167b5c4f6d03003b564ea18110c7c8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-09-28 11:19:26</sys_updated_on>
+    </sys_script_include>
+</record_update>

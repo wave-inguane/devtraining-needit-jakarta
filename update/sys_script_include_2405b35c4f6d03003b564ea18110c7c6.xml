@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_58872_needit.MiniJakartaCS</api_name>
+        <client_callable>true</client_callable>
+        <description>v1.0</description>
+        <name>MiniJakartaCS</name>
+        <script><![CDATA[//v1.0
+var MiniJakartaCS = Class.create();
+/*
+MiniJakartaCS: called by client script to request access and manipulation of the database
+ */
+MiniJakartaCS.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+	//...................................................................1
+	//////////////////////////---server---///////////////////////////////
+	//...................................................................crud-read
+	//will read the data from all client database supplied columns or fields
+	read: function () {
+		
+		/*
+		In concurrent programming, concurrent accesses to shared resources can
+		lead to unexpected or erroneous behavior, so parts of the program where
+		the shared resource is accessed are protected. This protected section
+		is the critical section or critical region. It cannot be executed by
+		more than one process.
+ 		*/
+		var semaphore = { x: 1 };//used to protect critical section
+			this._P(semaphore);//AquireLock
+			//comment this out after functional test
+			gs.addInfoMessage(
+			"$SERVER$: Script Include { MiniJakartaCS } Invoked By: " +
+				" { ClassName : " + this.getParameter('sysparm_class_name') + " } "+
+					" { FunctionName : " + this.getParameter('sysparm_function_name') + " } "+ " @  " +
+						new GlideDateTime());
+						
+						var tableName = this.getParameter('sysparm_table_name');
+						var gr = new GlideRecord(this.getParameter('sysparm_table_name')); //Indicate the table to query from
+						//The 'addQuery' line allows you to restrict the query to the field/value pairs specified (optional)
+						gr.query();//needed to get the row count
+						gs.addInfoMessage("$SERVER$: AquireLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+						
+						// build new response xml element for result
+						var result = this.newItem("result");//ElementTagName
+						result.setAttribute("message", "$SERVER$ : Table queried { " + tableName + " } ");
+							//------------------ GET ----------------------
+							//var strQuery = this.getParameter('sysparm_strQuery');
+							gr.addEncodedQuery(this.getParameter('sysparm_strQuery'));
+							gr.query();
+							
+							
+							var inforX =  this.getParameter('sysparm_client_infox');
+							var inforY  = this.getParameter('sysparm_client_infoy');
+							
+							while (gr.next()) { //While the recordset contains records, iterate through them
+								//Delete this after functional test pass
+								//this._addFavorite(gr.getValue('number'), gr.getDisplayValue('caller_id'));
+								//for(var f in gr){
+									//	if(f===inforX || f=== inforY)
+									//	gs.addInfoMessage(f + " : " + gr[f]);
+									//   }
+									//TODO: cover all 4 cases
+									if( !gr.hasOwnProperty(gr[ inforX ]) && !gr.hasOwnProperty(gr[ inforY ]))//ref fields
+										this._addFavorite(gr[ inforX ].getDisplayValue() , gr[ inforY].getDisplayValue());
+									else
+										if( gr.hasOwnProperty(gr[ inforX ]) && !gr.hasOwnProperty(gr[ inforY ]))//ref fields
+										this._addFavorite(gr.getValue(inforX)  , gr[ inforY].getDisplayValue());
+									else
+										if( !gr.hasOwnProperty(gr[ inforX ]) && gr.hasOwnProperty(gr[ inforY ]))//ref fields
+										this._addFavorite(gr[ inforX ].getDisplayValue() ,  gr.getValue(inforY) );
+									else
+										this._addFavorite( gr.getValue(inforX) , gr.getValue(inforY) );
+									// all items are returned to the client through the inherited methods of
+									//AbstractAjaxProcessor
+									//------------------ END PUT ----------------------
+								}
+								
+								this._V(semaphore);//releaseLock
+								
+								gr.initialize();
+								gr.query();
+								gs.addErrorMessage("$SERVER$: releaseLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+								
+							},
+							// this function is not client callable
+							_addFavorite: function (name, value) {
+								var favs = this.newItem("favorite");//ElementTagName
+								favs.setAttribute("name", name);
+								favs.setAttribute("value", value);
+							},
+							//...................................................................2
+							//////////////////////////---server---///////////////////////////////
+							//...................................................................crud-create
+							create: function () {
+								var semaphore = { x: 1 };
+									this._P(semaphore);//AquireLockhttps://dev25300.service-now.com/images/icons/save.gifx
+									
+									//comment this out after functional test
+									gs.addInfoMessage(
+									"$SERVER$: Script Include { MiniJakartaCS } Invoked By: " +
+										" { ClassName : " + this.getParameter('sysparm_class_name') + " } "+
+											" { FunctionName : " + this.getParameter('sysparm_function_name') + " } "+ " @  " +
+												new GlideDateTime());
+												
+												var tableName = this.getParameter('sysparm_table_name');
+												var gr = new GlideRecord(tableName); //Indicate the table to query from
+												//The 'addQuery' line allows you to restrict the query to the field/value pairs specified (optional)
+												gr.query();//needed to get the row count
+												gs.addInfoMessage("$SERVER$: aquireLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+												
+												
+												// build new response xml element for result
+												var result = this.newItem("result");//ElementTagName
+												result.setAttribute("message", "$SERVER$ : Table queried { " + tableName + " } ");
+													//------------------ POST ----------------------
+													gr.initialize();
+													
+													//--Magic
+													gr.short_description = this.getParameter('sysparm_short_description');
+													gr.number = this.getParameter('sysparm_record_number');
+													gr.u_requested_for_email = this.getParameter('sysparm_u_requested_for_email');
+													gr.u_request_type = this.getParameter('sysparm_u_request_type');
+													gr.u_what_needed = this.getParameter('sysparm_u_what_needed');
+													gr.u_when_needed = this.getParameter('sysparm_u_when_needed');
+													
+													gr.insert();
+													//---------------------- END POST ---------------------
+													this._V(semaphore);//releaseLock
+													
+													gr.initialize();
+													gr.query();//needed to get the row count
+													gs.addErrorMessage("$SERVER$: releaseLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+													
+												},
+												//...................................................................3
+												//////////////////////////---server---///////////////////////////////
+												//...................................................................crud-update
+												update: function () {
+													var semaphore = { x: 1 };
+														this._P(semaphore);//AquireLockhttps://dev25300.service-now.com/images/icons/save.gifx
+														
+														//comment this out after functional test
+														gs.addInfoMessage(
+														"$SERVER$: Script Include { MiniJakartaCS } Invoked By: " +
+															" { ClassName : " + this.getParameter('sysparm_class_name') + " } "+
+																" { FunctionName : " + this.getParameter('sysparm_function_name') + " } "+ " @  " +
+																	new GlideDateTime());
+																	
+																	var tableName = this.getParameter('sysparm_table_name');
+																	var gr = new GlideRecord(tableName); //Indicate the table to query from
+																	//The 'addQuery' line allows you to restrict the query to the field/value pairs specified (optional)
+																	gr.query();//needed to get the row count
+																	gs.addInfoMessage("$SERVER$: aquireLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+																	
+																	
+																	// build new response xml element for result
+																	var result = this.newItem("result");//ElementTagName
+																	result.setAttribute("message", "$SERVER$ : Table queried { " + tableName + " } ");
+																		//------------------ PUT ----------------------
+																		var strQuery = this.getParameter('sysparm_strQuery');
+																		gr.addEncodedQuery(strQuery);
+																		gr.query();
+																		while (gr.next()) {
+																			gr.short_description = this.getParameter('sysparm_short_description');
+																			gr.number = this.getParameter('sysparm_record_number');
+																			gr.u_requested_for_email = this.getParameter('sysparm_u_requested_for_email');
+																			gr.u_request_type = this.getParameter('sysparm_u_request_type');
+																			gr.u_what_needed = this.getParameter('sysparm_u_what_needed');
+																			gr.u_when_needed = this.getParameter('sysparm_u_when_needed');
+																			
+																			gr.update();
+																		}
+																		//---------------------- END PUT ---------------------
+																		this._V(semaphore);//releaseLock
+																		
+																		gr.initialize();
+																		gr.query();//needed to get the row count
+																		gs.addErrorMessage("$SERVER$: releaseLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+																		
+																	},
+																	remove : function(){
+																		var semaphore = { x: 1 };
+																			this._P(semaphore);//AquireLockhttps://dev25300.service-now.com/images/icons/save.gifx
+																			
+																			//comment this out after functional test
+																			gs.addInfoMessage(
+																			"$SERVER$: Script Include { MiniJakartaCS } Invoked By: " +
+																				" { ClassName : " + this.getParameter('sysparm_class_name') + " } "+
+																					" { FunctionName : " + this.getParameter('sysparm_function_name') + " } "+ " @  " +
+																						new GlideDateTime());
+																						
+																						var tableName = this.getParameter('sysparm_table_name');
+																						var gr = new GlideRecord(tableName); //Indicate the table to query from
+																						//The 'addQuery' line allows you to restrict the query to the field/value pairs specified (optional)
+																						gr.query();//needed to get the row count
+																						gs.addInfoMessage("$SERVER$: aquireLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+																						
+																						
+																						// build new response xml element for result
+																						var result = this.newItem("result");//ElementTagName
+																						result.setAttribute("message", "$SERVER$ : Table queried { " + tableName + " } ");
+							//------------------ DELETE ---------------------
+		var strQuery = this.getParameter('sysparm_strQuery');
+		gr.addEncodedQuery(strQuery);
+		gr.query();
+		while (gr.next()) {
+
+			gr.deleteRecord();
+		}
+		//---------------------- END DELETE ---------------------
+																		
+																		
+							//---------------------- END DELETE ---------------------
+																							this._V(semaphore);//releaseLock
+																							
+																							gr.initialize();
+																							gr.query();//needed to get the row count
+																							gs.addErrorMessage("$SERVER$: releaseLock : " + semaphore.x + " TOTAL RECORDS : " + gr.getRowCount());
+																						},
+																						_P: function (sem) {while (sem.x <= 0);sem.x--;},
+																							
+																							_V: function (sem) {sem.x++;},
+																								_goodjs: function (inguaneDB, properties, newValues) {
+																									for (i = 0; i < properties.length; i += 1) {
+																										//gs.addErrorMessage(properties[i] + ': ' + inguaneDB[properties[i]]);
+																										if ((inguaneDB[properties[i]] !== undefined) ||
+																											(inguaneDB[properties[i]] === null))
+																										inguaneDB[properties[i]] = newValues[i];
+																									}
+																								},
+																								type: 'MiniJakartaCS'
+																							});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-09-28 04:18:16</sys_created_on>
+        <sys_id>2405b35c4f6d03003b564ea18110c7c6</sys_id>
+        <sys_mod_count>57</sys_mod_count>
+        <sys_name>MiniJakartaCS</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_2405b35c4f6d03003b564ea18110c7c6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-09-30 20:06:38</sys_updated_on>
+    </sys_script_include>
+</record_update>

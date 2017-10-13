@@ -3,16 +3,16 @@
     <sys_script action="INSERT_OR_UPDATE">
         <abort_action>false</abort_action>
         <access>package_private</access>
-        <action_delete>false</action_delete>
-        <action_insert>false</action_insert>
+        <action_delete>true</action_delete>
+        <action_insert>true</action_insert>
         <action_query>false</action_query>
         <action_update>true</action_update>
-        <active>false</active>
+        <active>true</active>
         <add_message>false</add_message>
         <advanced>true</advanced>
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
-        <collection>x_58872_needit_needit</collection>
+        <collection>incident</collection>
         <condition/>
         <description/>
         <execute_function>false</execute_function>
@@ -28,176 +28,190 @@
         <rest_service_text/>
         <rest_variables/>
         <role_conditions/>
-        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
-
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/){
+	gs.addInfoMessage("BR: UnitTEST " + " isActive " + " $Table : " +current.sys_class_name);
+	/*
+	if (!gs.hasRole("admin")) {
+		//Check to see if this is a query for a specific ID
+		if (current.getEncodedQuery().indexOf('sys_id=') != 0) {
+			current.addQuery("active", "true");
+		}
+	}
+	*/
 })(current, previous);
+
+
+
+function sys_user_listGetViewName() {
+	sys_userGetViewName();
+}
+
+
+function insert(current){
+	/*
+	Client : Method
+	InguanejsM2: CRUD - CREATE
+	Last update: 9/25/2017
+	v1.0 passed ft
+ 	*/
+	
+	//DO NOT DELETE
+	//current. will retieve system field names
+	//if needed display all sys_fields
+	//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
+	
+	//Initialize all the parameters before the method call
+	var classAndFileName = { ClassName: " UnitTEST", FunctionName: "Business Rule" };
+		
+		try {
+			//NOTE: current. will retieve system field names
+			var gr = new GlideRecord(current.sys_class_name);
+			gr.initialize();
+			//..........................EDIT......................................
+			gr.short_description = 'I am the short desc III.';
+			gr.number = 'NI001000';
+			//Manual selection
+			//gr.u_requested_for.setDisplayValue('FirstName LastName');
+			gr.u_requested_for_email = 'Inguane@twd.com';
+			gr.u_request_type = 'Legal';
+			gr.u_what_needed = 'Legal 3';
+			gr.u_when_needed = '2017-09-29 08:07:53';
+			//gr.caller_id.setDisplayValue('Joe Employee');
+			//...........................END EDIT.....................................
+			gr.insert();
+			gs.addInfoMessage("New record inserted in " + gr.getTableName() + " table");
+		} catch (err) {
+			//display
+			gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
+		}
+	}
+	function update(current){
+		/*
+		Client : Method
+		InguanejsM2: CRUD - UPDATE
+		Last update: 9/25/2017
+		v1.0 passed ft
+ 		*/
+		//DO NOT DELETE
+		//current. will retieve system field names
+		//if needed display all sys_fields
+		//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
+		
+		//Initialize all the parameters before the method call
+		var classAndFileName = { ClassName: " UnitTEST", FunctionName: "Business Rule" };
 			
+			try {
+				//NOTE: current. will retieve system field names
+				var gr = new GlideRecord(current.sys_class_name);
+				
+				//................................EDIT.................................
+				gr.addQuery('priority', 3);
+				gr.addQuery('number','NI002003');
+				gr.query();
+				while (gr.next()) {
+					gr.priority = 1;
+					gr.update();
+				}
+				//................................END EDIT................................
+				
+				gs.addInfoMessage("Record number: "+ gr.number + " updated in " + gr.getTableName() + " table");
+			} catch (err) {
+				//display
+				gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
+			}
+		}
+		function  remove(current){
+			/*
+			Client : Method
+			InguanejsM2: CRUD - DELETE
+			Last update: 9/25/2017
+			v1.0 passed ft
+ 			*/
+			//DO NOT DELETE
+			//current. will retieve system field names
+			//if needed display all sys_fields
+			//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
 			
-			function insert(current){
+			//Initialize all the parameters before the method call
+			var classAndFileName =  {ClassName:" UnitTEST", FunctionName:"Business Rule"};
+				
+				try{
+					var gr = new GlideRecord(current.sys_class_name);
+					
+					//build query string
+					var strQuery = 'priority=4';
+					//strQuery = strQuery + '^category=software';
+					//strQuery = strQuery + '^ORcategory=hardware';
+					//strQuery = strQuery + '^state=1';
+					//get instance
+					var dbquery = new DeleteInguaneSIBR();
+					//invoke
+					dbquery.inguaneSiBrDelete(gr, strQuery, classAndFileName);
+					
+					gs.addInfoMessage(" deleted in " + gr.getTableName() + " table");
+				}catch(err){
+					//display
+					gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
+				}
+			}
+			
+			///-----DONE
+			
+			function read(current){
 				/*
 				Client : Method
-				InguanejsM2: CRUD - CREATE
+				InguanejsM1: CRUD - READ
 				Last update: 9/25/2017
 				v1.0 passed ft
  				*/
-				
-				//DO NOT DELETE
-				//current. will retieve system field names
 				//if needed display all sys_fields
 				//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
 				
-				//Initialize all the parameters before the method call
-				var classAndFileName = { ClassName: " UnitTEST", FunctionName: "Business Rule" };
-					
-					try {
-						//NOTE: current. will retieve system field names
-						var gr = new GlideRecord(current.sys_class_name);
-						gr.initialize();
-						//..........................EDIT......................................
-						gr.short_description = 'I am the short desc III.';
-						gr.number = 'NI001000';
-						//Manual selection
-						//gr.u_requested_for.setDisplayValue('FirstName LastName');
-						gr.u_requested_for_email = 'Inguane@twd.com';
-						gr.u_request_type = 'Legal';
-						gr.u_what_needed = 'Legal 3';
-						gr.u_when_needed = '2017-09-29 08:07:53';
-						//gr.caller_id.setDisplayValue('Joe Employee');
-						//...........................END EDIT.....................................
-						gr.insert();
-						gs.addInfoMessage("New record inserted in " + gr.getTableName() + " table");
-					} catch (err) {
-						//display
-						gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
-					}
-				}
-				function update(current){
-					/*
-					Client : Method
-					InguanejsM2: CRUD - UPDATE
-					Last update: 9/25/2017
-					v1.0 passed ft
- 					*/
-					//DO NOT DELETE
-					//current. will retieve system field names
-					//if needed display all sys_fields
-					//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
-					
+				
+				//...............................EDIT.......................................
+				//build query string
+				var strQuery = 'active=true';
+				//strQuery = strQuery + '^category=software';
+				//strQuery = strQuery + '^ORcategory=hardware';
+				//strQuery = strQuery + '^state=1';
+				//what data is needed
+				//To  get the field lable value do:
+				//current.Ctrl+space
+				var keyValueDataPair = { key: "Email", value: 'u_requested_for_email' };
+					//..............................END EDIT.....................................
 					//Initialize all the parameters before the method call
 					var classAndFileName = { ClassName: " UnitTEST", FunctionName: "Business Rule" };
 						
-						try {
-							//NOTE: current. will retieve system field names
-							var gr = new GlideRecord(current.sys_class_name);
-							
-							//................................EDIT.................................
-							gr.addQuery('priority', 3);
-							gr.addQuery('number','NI002003');
-							gr.query();
-							while (gr.next()) {
-								gr.priority = 1;
-								gr.update();
-							}
-							//................................END EDIT................................
-							
-							gs.addInfoMessage("Record number: "+ gr.number + " updated in " + gr.getTableName() + " table");
-						} catch (err) {
-							//display
-							gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
-						}
-					}
-					function  remove(current){
-						/*
-						Client : Method
-						InguanejsM2: CRUD - DELETE
-						Last update: 9/25/2017
-						v1.0 passed ft
- 						*/
-						//DO NOT DELETE
-						//current. will retieve system field names
-						//if needed display all sys_fields
-						//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
+						//get instance
+						var gr = new GlideRecord(current.sys_class_name);
+						gs.addErrorMessage(" TABLE-NAME: " + gr.getTableName());
 						
-						//Initialize all the parameters before the method call
-						var classAndFileName =  {ClassName:" UnitTEST", FunctionName:"Business Rule"};
-							
-							try{
-								var gr = new GlideRecord(current.sys_class_name);
-								
-								//build query string
-								var strQuery = 'priority=4';
-								//strQuery = strQuery + '^category=software';
-								//strQuery = strQuery + '^ORcategory=hardware';
-								//strQuery = strQuery + '^state=1';
-								//get instance
-								var dbquery = new DeleteInguaneSIBR();
-								//invoke
-								dbquery.inguaneSiBrDelete(gr, strQuery, classAndFileName);
-								
-								gs.addInfoMessage(" deleted in " + gr.getTableName() + " table");
-							}catch(err){
+						//get instance
+						var dbquery = new GetInguaneSIBR();
+						
+						try {
+							//invoke
+							var result = dbquery.inguaneSiBrGetAll(gr, strQuery, keyValueDataPair, classAndFileName);
+							//receive the results
+							var output = "&BR-received&: ";
+							for (var i = 0; i < result.length; i++) {
+								var data = result[i];
+								output += " { " + data.dataKey + " : " + data.dataValue + " } ";
+								}
+								//use the data
+								gs.addInfoMessage(output);
+							} catch (err) {
 								//display
 								gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
 							}
-						}
-						
-						///-----DONE
-						
-						function read(current){
-							/*
-							Client : Method
-							InguanejsM1: CRUD - READ
-							Last update: 9/25/2017
-							v1.0 passed ft
- 							*/
-							//if needed display all sys_fields
-							//new InguaneGetFieldName().printAllFieldsSysNames(current.sys_class_name);
-							
-							
-							//...............................EDIT.......................................
-							//build query string
-							var strQuery = 'active=true';
-							//strQuery = strQuery + '^category=software';
-							//strQuery = strQuery + '^ORcategory=hardware';
-							//strQuery = strQuery + '^state=1';
-							//what data is needed
-							//To  get the field lable value do:
-							//current.Ctrl+space
-							var keyValueDataPair = { key: "Email", value: 'u_requested_for_email' };
-								//..............................END EDIT.....................................
-								//Initialize all the parameters before the method call
-								var classAndFileName = { ClassName: " UnitTEST", FunctionName: "Business Rule" };
-									
-									//get instance
-									var gr = new GlideRecord(current.sys_class_name);
-									gs.addErrorMessage(" TABLE-NAME: " + gr.getTableName());
-									
-									//get instance
-									var dbquery = new GetInguaneSIBR();
-									
-									try {
-										//invoke
-										var result = dbquery.inguaneSiBrGetAll(gr, strQuery, keyValueDataPair, classAndFileName);
-										//receive the results
-										var output = "&BR-received&: ";
-										for (var i = 0; i < result.length; i++) {
-											var data = result[i];
-											output += " { " + data.dataKey + " : " + data.dataValue + " } ";
-											}
-											//use the data
-											gs.addInfoMessage(output);
-										} catch (err) {
-											//display
-											gs.addErrorMessage("&CLIENT&: UnitTEST Error : " + err.messag);
-										}
-									}]]></script>
+						}]]></script>
         <sys_class_name>sys_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-09-23 09:23:04</sys_created_on>
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>769a03ba4f1143003b564ea18110c79d</sys_id>
-        <sys_mod_count>188</sys_mod_count>
+        <sys_mod_count>212</sys_mod_count>
         <sys_name>UnitTEST</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -205,9 +219,9 @@
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_769a03ba4f1143003b564ea18110c79d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-09-28 15:52:39</sys_updated_on>
+        <sys_updated_on>2017-10-13 05:25:06</sys_updated_on>
         <template/>
-        <when>before</when>
+        <when>before_display</when>
     </sys_script>
     <sys_translated_text action="delete_multiple" query="documentkey=769a03ba4f1143003b564ea18110c79d"/>
 </record_update>

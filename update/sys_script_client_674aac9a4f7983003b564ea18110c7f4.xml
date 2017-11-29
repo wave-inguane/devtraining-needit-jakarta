@@ -111,14 +111,69 @@ function onChange(control, oldValue, newValue, isLoading) {
 	   
 }
 
+//DEFAULT
+function highlights(tableName,fieldName){
+	//Highlight affected fields
+	g_form.flash(tableName+'.'+fieldName, "#00FF00", -4);
+	(function () {
+		var myVar2 = g_form.getControl(fieldName);
+		myVar2.style.width = '200px';
+		myVar2.style.backgroundColor = 'yellow';
+		myVar2.style.color = 'mediumblue';
+		//myVar2.style.fontWeight = 'bold';
+		(function (node) {
+			var level = 1;
+			var step = function () {
+				var hex = level.toString(16);
+				node.style.backgroundColor = '#FFFF' + hex + hex;
+				if (level < 15) {
+					level += 1;
+					setTimeout(step, 100);
+				}
+			};
+			setTimeout(step, 100);
+		}(myVar2));
+	}());
+}
+
+//--------------------------------------------------------------------------
+/*
+Hi Ian,
+
+I am working on USCIS-1573, and I just hit a roadblock. I would like to share my screen with you today to demo the story and get some feedback from you.
+
+I have attached a file that contains the breakdown of the story in 4-parts.
+
+I am currently working on part one.
+
+Please ping me on skype when you are ready to help out.
+*/
+//--------------------------------------------------------------------------
 
 
 //--------------------------------------------------------------------------
+// isMember check for membership
 //--------------------------------------------------------------------------
-
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
+function onLoad() {
+	g_form.setValue('requested_by',g_user.userID);
+	
+	
+	//Check to see if logged in user is a member of selected group
+	var grpName = 'Deployment Services';
+	var usrID = g_user.userID; //Get current user ID
+	var grp = new GlideRecord('sys_user_grmember');
+	grp.addQuery('group.name', grpName);
+	grp.addQuery('user.sys_id', usrID);
+	grp.query();
+	if (grp.next()){
+		// user is a member of the group - allow the form to load normally.
+	}
+	else {
+		// user it not a member of the so we need to warn them that it won't work properly
+		alert('This service is for Deployment Services group members only.  If you see this message the system does not recognize you as are being a member.  This will result in an inappropriate Catalog Task assignment.');
+		g_form.showErrorBox("requested_by", "Not recognized as a Deployment Services group member"); 
+	}	
+}
 
 
 //--------------------------------------------------------------------------
@@ -209,7 +264,7 @@ function onChange(control, oldValue, newValue, isLoading) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>674aac9a4f7983003b564ea18110c7f4</sys_id>
-        <sys_mod_count>9</sys_mod_count>
+        <sys_mod_count>12</sys_mod_count>
         <sys_name>UnitTESTbuffer</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -217,7 +272,7 @@ function onChange(control, oldValue, newValue, isLoading) {
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_client_674aac9a4f7983003b564ea18110c7f4</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-11-10 07:13:06</sys_updated_on>
+        <sys_updated_on>2017-11-16 16:47:40</sys_updated_on>
         <table>x_58872_needit_needit</table>
         <type>onLoad</type>
         <ui_type>0</ui_type>

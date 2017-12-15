@@ -7,7 +7,7 @@
         <action_insert>true</action_insert>
         <action_query>false</action_query>
         <action_update>true</action_update>
-        <active>true</active>
+        <active>false</active>
         <add_message>false</add_message>
         <advanced>true</advanced>
         <change_fields>false</change_fields>
@@ -30,18 +30,7 @@
         <role_conditions/>
         <script><![CDATA[(function executeRule(current, previous /*null when async*/){
 	gs.addInfoMessage("BR: UnitTEST " + " isActive " + " $Table : " +current.sys_class_name);
-	/*
-	if (!gs.hasRole("admin")) {
-		//Check to see if this is a query for a specific ID
-		if (current.getEncodedQuery().indexOf('sys_id=') != 0) {
-			current.addQuery("active", "true");
-		}
-	}
-	*/
-var li = Packages.java.util.ArrayList();
-	li.add("you!");
-//var len = Packages.java.lang.reflect.Array.getLength(val);
-gs.addInfoMessage(li.get(0));
+
 })(current, previous);
 
 
@@ -215,7 +204,7 @@ function insert(current){
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>769a03ba4f1143003b564ea18110c79d</sys_id>
-        <sys_mod_count>220</sys_mod_count>
+        <sys_mod_count>222</sys_mod_count>
         <sys_name>UnitTEST</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -223,7 +212,7 @@ function insert(current){
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_769a03ba4f1143003b564ea18110c79d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-11-07 00:26:25</sys_updated_on>
+        <sys_updated_on>2017-12-06 14:54:47</sys_updated_on>
         <template/>
         <when>before_display</when>
     </sys_script>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>Change Request EID ISSO Approved</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[try {
+	
+	var message = '<p><img style="align: baseline;" src="/EmailBanner.pngx" alt="VAT myIT Banner" align="baseline" border="" hspace="" vspace="" /></p>';
+	
+	var titleStyle = ' style="color: brown; font-size: 2em; font-weight: bold;"';
+	var labelStyle = ' style="color: green; font-style: italic; border: 1px solid grey;"';
+	var valueStyle = ' style="color: blue; border: 1px solid grey;"';
+	
+	message += '<p ' + titleStyle + '>USCIS EID ISSO Approval Notification <br>Change Request: ' + current.number + '</p>';
+	
+	var change = new GlideRecord('change_request');
+	change.addQuery('number', current.number);
+	change.query();
+	if(change.next()){
+		message += '<br>';
+		message += 'Change Request ' + current.number + '<br>';
+		message += 'Short description: ' + change.short_description + '<br>';
+		message += 'Description: ' + change.description + '<br>';
+		message += 'Opened By: ' + change.opened_by.name + '<br>';
+		message += 'Requested For: ' + change.u_requested_for.name + '<br>';
+		message += 'Assignment group: ' + change.assignment_group.name + '<br>';
+		message += 'Assigned to: ' + change.assigned_to.name + '<br>';
+		message += '<br>';
+		
+		var id1=false;
+		var id2=false;
+		var id3=false;
+		var id4=false;
+		var id5=false;
+		var id6=false;
+		var myNum = current.u_number_of_fisma_id_systems_impacted;
+		
+		if((myNum == '1')||(myNum == '2')||(myNum == '3')||(myNum == '4')||(myNum == '5')||(myNum == '6')){
+			id1 = true;
+		}
+		if((myNum == '2')||(myNum == '3')||(myNum == '4')||(myNum == '5')||(myNum == '6')){
+			id2 = true;
+		}
+		if((myNum == '3')||(myNum == '4')||(myNum == '5')||(myNum == '6')){
+			id3 = true;
+		}
+		if((myNum == '4')||(myNum == '5')||(myNum == '6')){
+			id4 = true;
+		}
+		if((myNum == '5')||(myNum == '6')){
+			id5 = true;
+		}
+		if(myNum == '6'){
+			id6 = true;
+		}
+		if(id1){
+			message += 'FISMA ID: ' + change.u_fisma_id.u_fisma_id + '<br>';
+			message += 'System Name: ' + change.u_system_name + '<br>';
+			message += '<br>';
+		}
+		if(id2){
+			message += 'FISMA ID 2: ' + change.u_fisma_id_2.u_fisma_id + '<br>';
+			message += 'System Name 2: ' + change.u_system_name_2 + '<br>';
+			message += '<br>';
+		}
+		if(id3){
+			message += 'FISMA ID 3: ' + change.u_fisma_id_3.u_fisma_id + '<br>';
+			message += 'System Name 3: ' + change.u_system_name_3 + '<br>';
+			message += '<br>';
+		}
+		if(id4){
+			message += 'FISMA ID 4: ' + change.u_fisma_id_4.u_fisma_id + '<br>';
+			message += 'System Name 4: ' + change.u_system_name_4 + '<br>';
+			message += '<br>';
+		}
+		if(id5){
+			message += 'FISMA ID 5: ' + change.u_fisma_id_5.u_fisma_id + '<br>';
+			message += 'System Name 5: ' + change.u_system_name_5 + '<br>';
+			message += '<br>';
+		}
+		if(id6){
+			message += 'FISMA ID 6: ' + change.u_fisma_id_6.u_fisma_id + '<br>';
+			message += 'System Name 6: ' + change.u_system_name_6 + '<br>';
+			message += '<br>';
+		}
+		
+		var approver = new GlideRecord('sysapproval_approver');
+		approver.addQuery('sysapproval.number', current.number);  //lookup the approval record by change number
+		approver.addQuery('state', 'approved');
+		approver.query();
+		while(approver.next()){
+			var comments = new GlideRecord('sys_journal_field');
+			comments.addQuery('element_id', approver.sys_id); //locate journal records related to this specific approval record
+			comments.orderByDesc('sys_created_on'); //sort with newest on top
+			comments.query();
+			if(comments.next()){
+				message += approver.approver.name + ' has reviewed ' + current.number + ' as part of ' + approver.wf_activity.name + ' and marked it as Approved.' + '<br>';
+				message += 'ISSO Approval Comments: ' + comments.value;
+				message += '<br>';
+				message += '<br>';
+			}
+		}
+
+}
+	
+	
+	template.print(message);
+	
+}
+catch(e) {
+	gs.log('Debug Change Request EID ISSO Approved: ' + e.message, 'ES: Change Request EID ISSO Approved');
+}]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-17 20:08:09</sys_created_on>
+        <sys_id>2eadcbd64fc343003b564ea18110c756</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Change Request EID ISSO Approved</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_email_2eadcbd64fc343003b564ea18110c756</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-17 20:08:09</sys_updated_on>
+    </sys_script_email>
+</record_update>

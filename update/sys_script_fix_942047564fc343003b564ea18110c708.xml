@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description>system wide search for a given code fragment</description>
+        <flush_cache>false</flush_cache>
+        <name>[TOOL] script search</name>
+        <run_once>true</run_once>
+        <script><![CDATA[//var search_for = "Comment cannot be viewed by technicians until work begins on the Requested Item";
+//"getStateMessage";
+//
+
+var search_for = "user_name";
+
+searchForScript(search_for);
+function searchForScript(script_fragment)
+{
+	var gr = new GlideRecord("sys_dictionary");
+	gr.addQuery("internal_type.name", "CONTAINS", "Script");
+	gr.orderBy("name");
+	gr.orderBy("element");
+	gr.query();
+	var msg = "RESULTS FOR ("+script_fragment+")\n";
+	var results = [];
+	while(gr.next())
+	{
+		var gr_rec = new GlideRecord(gr.name);
+		gr_rec.addQuery(gr.element, "CONTAINS", script_fragment);
+		gr_rec.query();
+		while(gr_rec.next())
+			//exclude this fix script from the results
+			if(!(gr.name == "sys_script_fix" && gr_rec.name == "[TOOL] script search"))
+				results.push("RESULT >>> "+gr.name+"."+gr.element+" > "+gr_rec.getDisplayValue()+":"+gr_rec.sys_id);
+	}
+	
+	if(results.length == 0)
+		msg += "NO RESULTS FOUND";
+	else
+		msg += results.join("\n");
+	
+	gs.print(msg);
+}]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-17 19:08:46</sys_created_on>
+        <sys_id>942047564fc343003b564ea18110c708</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>[TOOL] script search</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_942047564fc343003b564ea18110c708</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-17 19:09:19</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

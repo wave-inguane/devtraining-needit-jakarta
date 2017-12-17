@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>Sponsor Notify</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[try {
+	var message = '<p><img style="align: baseline;" src="/EmailBanner.pngx" alt="USCIS myIT Banner" align="baseline" border="" hspace="" vspace="" /></p>';
+	
+	var titleStyle = ' style="color: brown; font-size: 2em; font-weight: bold;"';
+	var labelStyle = ' style="color: green; font-style: italic; border: 1px solid grey;"';
+	var valueStyle = ' style="color: blue; border: 1px solid grey;"';
+	
+	message += '<p ' + titleStyle + '>FSN ' + event.parm1 + ' has been approved per ' + current.number + '</p>';
+	
+	message += '<br>';
+	message += 'Description:' + '<br>';
+	message += '----------------------------------------------------------' + '<br>';
+	message += 'Employee Onboarding Request FSN' + '<br>';
+	message += '<br>';
+	message += 'Sponsor - Name: ' + current.variables.requested_by.name + '<br>';
+	message += 'Sponsor - Email: ' + current.variables.requested_by_email + '<br>';
+	message += 'Sponsor - Position: ' + current.variables.requested_by_position + '<br>';
+	message += 'Sponsor - Work Telephone: ' + current.variables.requested_by_work_phone_number + '<br>';
+	message += 'Sponsor - Work Mobile: ' + current.variables.equested_by_work_mobile_number + '<br>';
+	message += '<br>';
+	message += 'FSN - First Name: ' + current.variables.fsn_first_name + '<br>';
+	message += 'FSN - Middle Name: ' + current.variables.fsn_middle_name + '<br>';
+	message += 'FSN - Last Name: ' + current.variables.fsn_last_name + '<br>';
+	if(current.variables.fsn_aliases != ''){
+		message += 'FSN - Alias: ' + current.variables.fsn_aliases + '<br>';
+	}
+	message += 'FSN - Personal Email: ' + current.variables.fsn_personal_email_address + '<br>';
+	message += 'FSN - Personal Phone: ' + current.variables.fsn_personal_telephone_number + '<br>';
+	message += 'FSN - City of Birth: ' + current.variables.fsn_city_of_birth + '<br>';
+	message += 'FSN - Date of Birth: ' + current.variables.fsn_date_of_birth + '<br>';
+	message += 'FSN - Country of Birth: ' + current.variables.fsn_country_of_birth + '<br>';
+	if(current.variables.fsn_country_other != ''){
+		message += 'FSN Country of Birth: ' + current.variables.fsn_country_other + '<br>';
+	}
+	message += 'FSN - Gender: ' + current.variables.fsn_gender + '<br>';
+	message += '----------------------------------------------------------' + '<br>';
+	message += '<br>';
+	
+	var approvers = new GlideRecord('sysapproval_approver');
+	approvers.addQuery('sysapproval', current.sys_id);
+	approvers.addQuery('state', 'approved');
+	approvers.query();
+	while(approvers.next()){
+		message += 'Approval received from: ' + approvers.approver.name + '<br>';
+		
+	}
+	
+	
+	template.print(message);
+	var newSubject = 'FSN ' + event.parm1 + ' has been approved per ' + current.number;
+	email.setSubject(newSubject);
+	
+}
+catch(e) {
+	gs.log('Debug FSN Sponsor Notify: ' + e.message, 'ES: FSN Sponsor Notify');
+}]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-17 20:09:31</sys_created_on>
+        <sys_id>421e4f1a4fc343003b564ea18110c7c4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Sponsor Notify</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_email_421e4f1a4fc343003b564ea18110c7c4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-17 20:09:31</sys_updated_on>
+    </sys_script_email>
+</record_update>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>Approval Notification Final Cancel</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[try {
+	
+	var message = '<p><img style="align: baseline;" src="/EmailBanner.pngx" alt="USCIS myIT Banner" align="baseline" border="" hspace="" vspace="" /></p>';
+			
+	var cancelMessage = '<p style="color: red; font-weight: bold;"> An approval or rejection has not been recieved within the 15 day time limit. This approval has expired.</p>';
+
+	var reqItemSysId = current.sysapproval;
+	var reqItem = reqItemSysId.cat_item.name;
+	var reqBy = reqItemSysId.variables.requester.name;
+	var reqByEmail = reqItemSysId.variables.requester.email;
+	var reqFor = reqItemSysId.variables.requested_for.name;
+	var reqShortDesc = reqItemSysId.short_description;
+	var reqDesc = reqItemSysId.description;
+	
+	var reqForMessage = '';
+	
+	if( reqBy.toString() !== reqFor.toString()) reqForMessage = ', on behalf of ' + reqFor + ',';
+
+	var titleStyle = ' style="color: brown; font-size: 1.5em; font-weight: bold;"';
+	var labelStyle = ' style="color: green; font-style: italic; border: 1px solid grey;"';
+	var valueStyle = ' style="color: blue; border: 1px solid grey;"';
+
+	message += '<p ' + titleStyle + '>' + reqItem + ' Approval</p>';
+	message += cancelMessage;
+	
+	message += '<p>Request received from ' + reqBy + reqForMessage + '</p>';
+	
+	message += '<table style="border: 1px solid black; border-collapse: collapse;"';
+	message += '<tr><td' + labelStyle + '>Request Item Short Description</td><td' + valueStyle + '>' + reqShortDesc + '</td></tr>';
+	message += '<tr><td' + labelStyle + '>Request Item Description</td><td' + valueStyle + '>' + reqDesc + '</td></tr>';
+	message += '</table>';
+	
+	//gs.log('debug approval management email: ' + message);
+
+	template.print(message);
+
+}
+catch(e) {
+	gs.log('Debug Assignment Group Cancelled Notification email script error: ' + e.message);
+}
+]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-17 19:28:14</sys_created_on>
+        <sys_id>cfa4c7964fc343003b564ea18110c793</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Approval Notification Final Cancel</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_email_cfa4c7964fc343003b564ea18110c793</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-17 19:28:14</sys_updated_on>
+    </sys_script_email>
+</record_update>

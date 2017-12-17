@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>Multiple CC</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[try {
+	
+	var changeNumber = event.parm1;
+	var systemName = event.parm2;
+	
+	var message = '<p><img style="align: baseline;" src="/EmailBanner.pngx" alt="USCIS myIT Banner" align="baseline" border="" hspace="" vspace="" /></p>';
+	
+	var titleStyle = ' style="color: brown; font-size: 2em; font-weight: bold;"';
+	var labelStyle = ' style="color: green; font-style: italic; border: 1px solid grey;"';
+	var valueStyle = ' style="color: blue; border: 1px solid grey;"';
+	
+	message += '<p ' + titleStyle + '>Unable to locate Risk Management Branch Chief</p>';
+	
+	message += '<p>' + '<b>ServiceNow Team:</b><br>The ServiceNow system property "<b>isso.top.level.approver</b>" does not contain a valid user sys_id for the current Risk Management Branch Chief.  <br>This value is used as a backup should a system not have a valid ISSO approver.  Please contact the Ongoing Authorization (OA) Team at email.com to determine who is the current Risk Management Branch Chief in order to update the system property value with the sys_id of that user. </p><br><b>Change Submitter and Change Implementer:</b> <br>Please work with the OA team to update your system ISSO information in the IACS/ XACTA system. <br> Change Request ' + changeNumber + ' will be moved back to Initial Draft.  Until the ISSO can be updated this change can not proceed.';
+
+	var change = new GlideRecord('change_request');
+	change.addQuery('number', changeNumber);
+	change.query();
+	if(change.next()){
+		email.addAddress("cc", change.assigned_to.email, change.assigned_to.name);
+		email.addAddress("cc", change.opened_by.email, change.opened_by.name);	
+		email.addAddress("cc", change.u_requested_for.email, change.u_requested_for.name);	
+		email.addAddress("cc", change.requested_by.email, change.requested_by.name);	
+	}
+	
+	template.print(message);
+	
+}
+catch(e) {
+	gs.log('Debug ISSO Chief Missing Change email error: ' + e.message, 'ES: ISSO Chief Missing Change');
+}]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-17 20:05:51</sys_created_on>
+        <sys_id>eb5c8f9a4fc343003b564ea18110c703</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Multiple CC</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_email_eb5c8f9a4fc343003b564ea18110c703</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-17 20:05:51</sys_updated_on>
+    </sys_script_email>
+</record_update>

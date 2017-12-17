@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>New User Account CEC/VCC Password</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[try {
+	
+	var ritmNumber = event.parm1;
+	var ritmSysID = event.parm2;
+	var message = '<p><img style="align: baseline;" src="/EmailBanner.pngx" alt="USCIS myIT Banner" align="baseline" border="" hspace="" vspace="" /></p>';
+	
+	var titleStyle = ' style="color: brown; font-size: 2em; font-weight: bold;"';
+	var labelStyle = ' style="color: green; font-style: italic; border: 1px solid grey;"';
+	var valueStyle = ' style="color: blue; border: 1px solid grey;"';
+	
+	message += '<p ' + titleStyle + '>Account Creation Completed</p>';
+	message += '<p> ' + 'Request Item <b>' + ritmNumber + '</b> has been completed.</p>';
+	message += 'Requested By: ' + current.variables.requested_by.name + '<br>';
+	message += 'Requested For: ' + current.variables.requested_for.name + '<br>';
+	message += 'Supervisor / Manager: ' + current.variables.supervisor_manager.name + '<br>';
+	message += '<br>';
+	message += 'Call Center: ' + current.variables.select_call_center + '<br>';
+	message += 'Call Center Location: ' + current.variables.call_center_location.name + '<br>';
+	message += 'Role: ' + current.variables.roll + '<br>';
+	message += 'DID Required: ' + current.variables.did_required + '<br>';
+	message += 'Computer Name: ' + current.variables.computer_name + '<br>';
+	message += '<br>';
+	message += 'Line 1 DN for Genesys Calls (Aria Place): ' + current.variables.ecc_help_deck_task_line_id + '<br>';
+	message += 'CME Username: ' + 'Your username was sent in a separate email for security reasons.' + '<br>';
+	message += 'CME Password: ' + current.variables.csped_cme_admin_task_password + '<br>';
+	message += 'Place: ' + current.variables.ecc_help_deck_task_place + '<br>';
+	message += 'Salesforce ID: ' + current.variables.salesforce_task_id + '<br>';
+	template.print(message);   
+	
+}
+catch(e) {
+	gs.log('Debug New User Account CEC/VCC Created email error: ' + e.message, 'ES: New User Account CEC/VCC Created');
+}]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-17 19:45:29</sys_created_on>
+        <sys_id>4da8435a4fc343003b564ea18110c7a4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>New User Account CEC/VCC Password</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_email_4da8435a4fc343003b564ea18110c7a4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-17 19:45:29</sys_updated_on>
+    </sys_script_email>
+</record_update>

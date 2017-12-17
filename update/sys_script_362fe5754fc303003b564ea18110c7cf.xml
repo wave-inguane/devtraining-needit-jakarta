@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>false</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_58872_needit_needit</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Knowledge Role Check</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	// Add your code here
+
+	var role = new GlideRecord('sys_user_role');
+	role.addQuery('name', 'u_knowledge_recert');
+	role.query();
+	if(role.next()){
+		var userRole = new GlideRecord('sys_user_has_role');
+		userRole.addQuery('role', role.sys_id);
+		userRole.addQuery('user', current.u_user);
+		userRole.query();
+		if(userRole.next()){
+			//user already has the role, we don't need to add
+		}
+		else{
+			// user does not have the role, we need to add
+			var gr = new GlideRecord('sys_user_has_role');
+			gr.initialize();
+			gr.user = current.u_user;
+			gr.role = role.sys_id;
+			gr.insert();
+		}
+		var userRole1 = new GlideRecord('sys_user_has_role');
+		userRole1.addQuery('role', role.sys_id);
+		userRole1.addQuery('user', current.u_supervisor);
+		userRole1.query();
+		if(userRole1.next()){
+			//supervisor already has the role, we don't need to add
+		}
+		else{
+			// supervisor does not have the role, we need to add
+			var gr1 = new GlideRecord('sys_user_has_role');
+			gr1.initialize();
+			gr1.user = current.u_supervisor;
+			gr1.role = role.sys_id;
+			gr1.insert();
+		}
+	}
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 00:01:12</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>362fe5754fc303003b564ea18110c7cf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Knowledge Role Check</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_362fe5754fc303003b564ea18110c7cf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 00:01:12</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=362fe5754fc303003b564ea18110c7cf"/>
+</record_update>

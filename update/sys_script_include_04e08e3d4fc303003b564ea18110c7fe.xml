@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_58872_needit.fsn_fileAttached_ajax</api_name>
+        <client_callable>true</client_callable>
+        <description>This is a script that takes a string and sys id and table to check for attachments</description>
+        <name>fsn_fileAttached_ajax</name>
+        <script><![CDATA[var fsn_fileAttached_ajax = Class.create();
+fsn_fileAttached_ajax.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+	isAttached : function() {
+		var gr_at = new GlideRecord("sys_attachment");
+		
+		var req_id = this.getParameter('sysparm_record_sysid');
+		var tbl_name = this.getParameter('sysparm_table_name');
+		var searchString = this.getParameter('sysparm_searchstring');
+		var fileType = this.getParameter('sysparm_filetype');
+		
+		gr_at.addQuery("table_name",tbl_name);
+		
+		gr_at.addQuery("table_sys_id", req_id);
+		
+		gr_at.query();
+		
+		var count = 0;
+		if (gr_at.next() ) {
+			var fname = gr_at.file_name.upper();
+			var ctype = gr_at.content_type.upper();
+			while ((fname.indexOf(searchString) != -1 || searchString=="") && (ctype.indexOf(fileType) != -1 || fileType==""))
+				{
+				//return true;
+					count++;
+			}
+			if(count<1){
+			return false;
+			}
+				else{
+					return true;
+				
+			}
+		}
+		else
+			{
+			
+			return false;
+		}
+	},
+    type: 'fsn_fileAttached_ajax'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 01:15:46</sys_created_on>
+        <sys_id>04e08e3d4fc303003b564ea18110c7fe</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>fsn_fileAttached_ajax</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_04e08e3d4fc303003b564ea18110c7fe</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 01:15:46</sys_updated_on>
+    </sys_script_include>
+</record_update>

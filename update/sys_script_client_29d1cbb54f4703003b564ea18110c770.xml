@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>caller_id</field>
+        <global>true</global>
+        <messages/>
+        <name>Set Location and Site Code</name>
+        <order/>
+        <script><![CDATA[function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+	
+	var execute = true;
+	if (isLoading && (g_form.getValue('assignment_group') == '9afaae376f489200a0b002e6eb3ee4c9' || (g_form.getValue('assignment_group') == '51d63d996f0ca200a0b002e6eb3ee436'))){
+		execute = false;
+	}
+	
+	if (execute){
+		var caller = g_form.getReference('u_affected_user', setLocation);
+	}
+   }
+	/*else {
+   var u_opened_on_behalf_of = g_form.getReference('u_opened_on_behalf_of', setLocationOnBehalf);
+	
+	}
+	*/
+
+
+function setLocation(caller) {
+   if (caller)
+       g_form.setValue('location', caller.location);
+	   g_form.setValue('u_suite', caller.u_suite);	   
+	   var currentCube = g_form.getValue('u_cube_number');
+	   if ((currentCube == '')||(currentCube == null)) {
+	    g_form.setValue('u_cube_number', caller.u_cube_number);
+	   }		   
+	   var sitecode = g_form.getReference('location', setSiteCode);
+}
+
+function setSiteCode(sitecode) {
+   if (sitecode)
+	   g_form.setValue('u_site_code', sitecode.u_site_code);
+}
+   
+]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:59:12</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>29d1cbb54f4703003b564ea18110c770</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Set Location and Site Code</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_client_29d1cbb54f4703003b564ea18110c770</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:59:12</sys_updated_on>
+        <table>incident</table>
+        <type>onChange</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

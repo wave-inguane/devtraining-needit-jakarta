@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description>Used to trigger the appropriate notifications after import.</description>
+        <flush_cache>false</flush_cache>
+        <name>Remedy Migration RITM Notifications</name>
+        <run_once>true</run_once>
+        <script><![CDATA[var record = new GlideRecord('sc_req_item');
+record.addEncodedQuery('u_legacy_remedy_id!=NULL');
+record.query();
+while (record.next()){
+	var message = '';
+	message += '00 ' + record.number + '\n';
+	record.autoSysFields(false);
+	if (record.assigned_to != '') {
+		// send the notification to the assignee directly
+		message += '01 record is assigned to: ' + record.assigned_to.user_name + '\n';
+		gs.eventQueue('remedy.migration.ritm.1', record);
+	}
+	else {
+		message += '02 record is not assigned to an individual.' + '\n';
+		var group = new GlideRecord('sys_user_group');
+		group.addQuery('sys_id', record.assignment_group.sys_id);
+		group.query();
+		if (group.next()){
+			if (group.u_queue_manager != ''){
+				message += '03 send message to queue manager: ' + group.u_queue_manager.user_name + '\n';
+				// send the notification to the queue manager directly
+				gs.eventQueue('remedy.migration.ritm.2', record);				
+			}
+			else {
+				message += '04 no queue manager, send to entire group: ' + group.name + '\n';
+				// no queue manager is defined, need to send to the entire group
+				gs.eventQueue('remedy.migration.ritm.3', record);
+			}
+		}
+	}
+	// send an email to the user letting them know that the record was moved into ServiceNow.
+	message += '05 send notice to requested for user: ' + record.u_requested_for.user_name + '\n';
+	gs.eventQueue('remedy.migration.ritm.4', record, record.u_requested_for.email);
+	gs.log(message, 'FS: Remedy Migration RITM Notifications');
+}]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:13:05</sys_created_on>
+        <sys_id>2c577ef14f4703003b564ea18110c74b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Remedy Migration RITM Notifications</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_2c577ef14f4703003b564ea18110c74b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:13:05</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sysevent_script_action">
+    <sysevent_script_action action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <condition_script/>
+        <description/>
+        <event_name>kb.use</event_name>
+        <name>Knowledge Use</name>
+        <order>100</order>
+        <script><![CDATA[knowledgeView();
+function knowledgeView() {
+	var kv = new GlideRecord("kb_use");
+	kv.used = true;
+	kv.user.setValue(event.parm2);
+	kv.article = event.instance;
+	kv.insert();
+	
+	incrementUseCount(event.instance);
+}
+
+function incrementUseCount(article){
+	var gr = new GlideRecord('kb_knowledge');
+	if(gr.get(article)){
+		var currentCount = gr.getValue('use_count');
+		if(!currentCount)
+			currentCount = 0;
+		gr.setValue('use_count',parseInt(currentCount)+1);
+		gr.setSystem(true);
+		gr.update();
+	}
+}]]></script>
+        <synchronous>false</synchronous>
+        <sys_class_name>sysevent_script_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:01:27</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>5b94f2f14f4703003b564ea18110c706</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Knowledge Use</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sysevent_script_action_5b94f2f14f4703003b564ea18110c706</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:01:27</sys_updated_on>
+    </sysevent_script_action>
+</record_update>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_58872_needit.PCQSRoleCall</api_name>
+        <client_callable>true</client_callable>
+        <description>Returns a string that contains sys ids of the linked pcqs roles that are linked to the selected pcqs organization</description>
+        <name>PCQSRoleCall</name>
+        <script><![CDATA[var PCQSRoleCall = Class.create();
+PCQSRoleCall.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+	
+		/*
+	--------------------------
+	getRoleFilter is used to return a reference qualifier string to show active and valid roles
+	related to the inputed organization sys_id.  If no valid organizations are found it returns junk so 
+	that no records are shown to the user.
+	--------------------------	
+	*/
+	getRoleFilter: function(){
+		
+		var count = 0;
+		var filter = "";
+		var orgID = this.getParameter('sysparm_orgid');
+		var gr = new GlideRecord('u_amb_pcqs_m2m');
+		gr.addQuery('u_organization.u_org_name', orgID);  // check for active orgID is done in getOrgFilter
+		gr.query();
+		while(gr.next()){
+			if(count == 0){
+				filter += "sys_idIN" + gr.u_role.sys_id;
+			}
+			else{
+				filter += ","+gr.u_role.sys_id;
+			}
+			count++;
+		}
+		if (count == 0){
+			// no records were found - need to return garbage so filter returns no results
+			filter = "sys_idIN81092384";
+		}
+		return filter;
+	},
+	
+	/*
+	--------------------------
+	getOrgFilter is used to return a reference qualifier string to show active and valid organizations
+	there are no inputs to this function.  If no valid organizations are found it returns junk so that no
+	records are shown to the user.
+	--------------------------	
+	*/
+	getOrgFilter: function(){ 
+	
+	var count = 0;
+	var filter = "";
+	var gr = new GlideRecord('u_amb_pcqs_org');
+	gr.addQuery('u_active', true);
+	gr.query();
+	while(gr.next()){
+		var check = new GlideRecord('u_amb_pcqs_m2m');
+		check.addQuery('u_organization', gr.sys_id);
+		check.addQuery('u_role.u_active', 'true');
+		check.query();
+		if(check.next()) { // there is at least one active role linked to this org so we can show it
+			
+			if(count == 0){
+				filter += "ORDERBYu_order^sys_idIN" + gr.sys_id;
+			}
+			else{
+				filter += ","+gr.sys_id;
+			}
+		}
+		count++;
+		
+	}
+	if (count == 0){
+		// no records were found - need to return garbage so filter returns no results
+		filter = "sys_idIN81092384";
+	}
+	return filter;
+},
+	
+    type: 'PCQSRoleCall'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 01:13:25</sys_created_on>
+        <sys_id>b01339754fc303003b564ea18110c755</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>PCQSRoleCall</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_b01339754fc303003b564ea18110c755</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 01:13:25</sys_updated_on>
+    </sys_script_include>
+</record_update>

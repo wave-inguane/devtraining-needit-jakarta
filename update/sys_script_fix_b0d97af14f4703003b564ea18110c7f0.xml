@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description/>
+        <flush_cache>false</flush_cache>
+        <name>Check for SSN</name>
+        <run_once>true</run_once>
+        <script><![CDATA[var count = 0;
+var countJournal = 0;
+var fixCounter = 0;
+var fixCounterJournal = 0;
+var grTasks = new GlideRecord("task");
+var message = '---->\n';
+grTasks.query(); // need to check all records on the task table
+message+= 'Checking [task] table Close Notes, Description, Short Description for SSN \n';
+while ((grTasks.next()) && (count <= 875000 ))   {  // set very high hard limit to counter.  Prod has 630,000 records as of 03/04/2016
+	var taskCloseNotes = grTasks.close_notes;
+	var taskDescription = grTasks.description;
+	var taskShortDescription = grTasks.short_description; 
+	var re = /\d{3}-\d{2}-\d{4}/gi; // regular expression for checking SSN text
+	var foundSSN = false;
+			
+	if (re.test(taskDescription)){ // check Description field
+		foundSSN = true;
+		//var scrubbed = taskDescription.replace(re, 'xxx-xx-xxxx');
+		//grTasks.description = scrubbed;
+		message+= 'Found record with SSN in the description: ' + grTasks.number + '\n';
+	}	
+	if (re.test(taskShortDescription)){ // check Short Description field
+		foundSSN = true;
+		//var scrubbed = taskShortDescription.replace(re, 'xxx-xx-xxxx');
+		//grTasks.short_description = scrubbed;
+		message+= 'Found record with SSN in the short description: ' + grTasks.number + '\n';
+	}
+	
+	if (re.test(taskCloseNotes)){ // check Close Notes field
+		foundSSN = true;
+		//var scrubbed = taskCloseNotes.replace(re, 'xxx-xx-xxxx');
+		//grTasks.close_notes = scrubbed;
+		message+= 'Found record with SSN in the close notes: ' + grTasks.number + '\n';
+	}	
+		
+	count++;
+	
+	if (foundSSN){ // if any field had an SSN then we need to update the record with scrubbed text
+		//message+= 'Updating ' + grTasks.number + ' to remove SSN.\n';
+		//grTasks.update();
+		fixCounter++;
+	}
+}
+
+var grJournals = new GlideRecord("sys_journal_field");
+grJournals.addQuery('name', 'task'); // only show matches on the task table.
+grJournals.query(); // run the query
+message+= 'Checking [sys_journal_field] table entries for SSN \n';
+while ((grJournals.next()) && (countJournal <= 875000)){
+	var re = /\d{3}-\d{2}-\d{4}/gi; // regular expression for checking SSN text
+	var journalValue = grJournals.value;
+	if (re.test(journalValue)){ // check field for SSN
+		//var scrubbed = journalValue.replace(re, 'xxx-xx-xxxx');
+		//grJournals.value = scrubbed;
+		var journalTask = new GlideRecord("task");
+		journalTask.addQuery('sys_id', grJournals.element_id);
+		journalTask.query();
+		journalTask.next();
+		message+= 'Found record with SSN in journal entry: ' + grJournals.element + ' on ' + journalTask.number + '\n';
+		//grJournals.update();
+		fixCounterJournal++;
+	}
+	countJournal++;
+	
+}
+
+// script is complete - log summary information:
+message+= 'SSN Scrub complete on task table records.  Number of records checked: ' + count + '. Number of records fixed: ' + fixCounter+ '\n';
+message+= 'SSN Scrub complete on journal entry table records.  Number of records checked: ' + countJournal + '. Number of records fixed: ' + fixCounterJournal + '\n';
+
+gs.log(message, 'FS: Script to scrub SSN on Task');]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:23:46</sys_created_on>
+        <sys_id>b0d97af14f4703003b564ea18110c7f0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Check for SSN</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_b0d97af14f4703003b564ea18110c7f0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:23:46</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

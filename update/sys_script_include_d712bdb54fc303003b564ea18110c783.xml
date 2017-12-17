@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>false</active>
+        <api_name>x_58872_needit.CategoryItemsHelper</api_name>
+        <client_callable>true</client_callable>
+        <description>Used for functions related to the Category and Item relationship.</description>
+        <name>CategoryItemsHelper</name>
+        <script><![CDATA[var CategoryItemsHelper = Class.create();
+CategoryItemsHelper.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+	getItemsByCategory: function(categoryID)
+	{
+		gs.log('Starting "getItemsByCategory" function.  categoryID = ' + categoryID, 'SI: CategoryItemsHelper');
+		var groups = [];
+		
+		var gr = new GlideRecord('sc_cat_item_category');
+		gr.addQuery('sc_category', categoryID);
+		gr.query();
+		while(gr.next())
+			{
+			if(gr.active)
+				{
+				var id = gr.sys_id.toString();
+				groups.push(id);
+			}
+		}
+		gs.log('groups = ' + groups, 'SI: CategoryItemsHelper');
+		return groups;
+	},
+	
+	
+	getItemsInCategory: function(categoryID) {
+		try
+		{
+			return this.getItemsByCategory(categoryID);
+		}
+		catch (e)
+		{
+			gs.log('ERROR: could not get list of items.');
+			return [];
+		}
+	},
+	
+	
+	getItemsQuery: function(categoryID) {
+		return this.getQuery(this.getItemsInCategory(categoryID));
+	},
+	
+	getItems: function() {
+		gs.log('Starting "getItems" function.  new_category_parent = ' + current.variables.new_category_parent, 'SI: CategoryItemsHelper');
+		var answer = '';
+		var includes = current.variables.new_category_parent;
+		var item = new GlideRecord('sc_cat_item_category');
+		item.addQuery('sc_category',includes);
+		item.query();
+		while (item.next()) {
+			gs.log('item.sc_cat_item.sys_id = ' + item.sc_cat_item.sys_id, 'SI: CategoryItemsHelper');
+			if (answer.length > 0) {
+				answer += (',' + item.sc_cat_item.sys_id);
+			}
+			else {
+				answer = '' + item.sc_cat_item.sys_id;
+			}
+		}
+		return 'sys_idIN' + answer;
+	},
+	type: 'CategoryItemsHelper'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 00:12:04</sys_created_on>
+        <sys_id>d712bdb54fc303003b564ea18110c783</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>CategoryItemsHelper</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_d712bdb54fc303003b564ea18110c783</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 00:12:04</sys_updated_on>
+    </sys_script_include>
+</record_update>

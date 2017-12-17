@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description>This fix script updates the urgency field with the appropriate selections.  </description>
+        <flush_cache>false</flush_cache>
+        <name>Change Urgency Fix</name>
+        <run_once>true</run_once>
+        <script><![CDATA[var change = new GlideRecord('change_request');
+change.addEncodedQuery('u_change_urgency!=1 - Critical^u_change_urgency!=2 - High^u_change_urgency!=3 - Medium^u_change_urgency!=4 - Low^u_change_urgencyANYTHING');
+change.query();
+while (change.next()){
+	var message = '00 ' + change.number + '\n';
+	if (change.u_change_urgency == '1-Critical'){
+		change.u_change_urgency = '1 - Critical';
+		message += '01 Urgency now set to 1 - Critial' + '\n';
+	}
+	if (change.u_change_urgency == '2-High'){
+		change.u_change_urgency = '2 - High';
+		message += '02 Urgency now set to 2 - High' + '\n';
+	}
+	if (change.u_change_urgency == '3-Medium'){
+		change.u_change_urgency = '3 - Medium';
+		message += '03 Urgency now set to 3 - Medium' + '\n';
+	}
+	if (change.u_change_urgency == '4-Low'){
+		change.u_change_urgency = '4 - Low';
+		message += '04 Urgency now set to 4 - Low' + '\n';
+	}
+	change.update();
+	message += '05 Update completed.';
+	gs.log(message, 'FS: Change Urgency Fix');
+}]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:11:08</sys_created_on>
+        <sys_id>88e6fa754f4703003b564ea18110c762</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Change Urgency Fix</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_88e6fa754f4703003b564ea18110c762</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:11:08</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

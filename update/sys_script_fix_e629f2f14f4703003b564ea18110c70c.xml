@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description>Used to mark recertification records as rejected after the recertification period ends.  Only applies to records that are still pending user or supervisor review.</description>
+        <flush_cache>false</flush_cache>
+        <name>Recertification Rejection</name>
+        <run_once>true</run_once>
+        <script><![CDATA[var recerts = new GlideRecord('u_recertification');
+//update the encoded query below to update to whatever set of records need to be marked as rejected
+recerts.addEncodedQuery('u_phase!=approved^ORu_phase=NULL^u_phase!=rejected^ORu_phase=NULL^u_system_name.u_sys_name=CLAIMS 4');
+recerts.query();
+while(recerts.next()){
+	var workflow = new Workflow();
+	workflow.cancel(recerts);
+	recerts.u_phase = 'rejected';
+	recerts.work_notes = 'This record has been marked rejected due to review and approval not being received.';
+	recerts.update();
+}]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:21:00</sys_created_on>
+        <sys_id>e629f2f14f4703003b564ea18110c70c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Recertification Rejection</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_e629f2f14f4703003b564ea18110c70c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:21:00</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

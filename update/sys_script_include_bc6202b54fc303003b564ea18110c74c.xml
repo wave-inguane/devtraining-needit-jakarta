@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_58872_needit.getGroupMembersByID</api_name>
+        <client_callable>true</client_callable>
+        <description>Returns a reference qualifier string of group member sys_ids when the group sys_id is passed in.</description>
+        <name>getGroupMembersByID</name>
+        <script><![CDATA[/*
+var getGroupMembersByID = Class.create();
+getGroupMembersByID.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+
+    type: 'getGroupMembersByID'
+});
+*/
+function getGroupMembersByID(groupID) {
+	var message = '';
+	var answer = '';
+	var members = new GlideRecord('sys_user_grmember');
+	members.addQuery('group', groupID);
+	members.query();
+	message += 'getRowCount() = ' + members.getRowCount() + '\n';
+	while(members.next()){
+		if (answer.length > 0){
+			message += 'answer.length is greater than 0 - adding member sys_id to the list' + '\n';
+			answer+= (',' + members.user.sys_id);
+		}
+		else {
+			message += 'answer.length is 0 - adding member sys_id to the list' + '\n';
+			answer = '' + members.user.sys_id;
+		}
+	}
+	message += answer + '\n';
+	//gs.log(message, 'SI: getGroupMembersByID');
+	return 'sys_idIN' + answer;
+	
+}]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 01:23:04</sys_created_on>
+        <sys_id>bc6202b54fc303003b564ea18110c74c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>getGroupMembersByID</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_bc6202b54fc303003b564ea18110c74c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 01:23:04</sys_updated_on>
+    </sys_script_include>
+</record_update>

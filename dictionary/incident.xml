@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element attributes="email_client=true,all_tables.query_hints=true,hasLabels=true,hasWorkflow=true,live_feed=true" audit="true" extends="task" label="Incident" max_length="40" name="incident" sizeclass="69" text_index="true" type="collection">
+        <element attributes="ref_contributions=user_show_incidents, ref_auto_completer=AJAXTableCompleter,ref_ac_columns=first_name;last_name;email;employee_number, ref_ac_columns_search=true" label="Affected User" max_length="32" name="x_58872_needit_u_affected_user" reference="sys_user" reference_qual="javascript:showUsers();" type="reference" use_reference_qualifier="advanced"/>
+    </element>
+</database>

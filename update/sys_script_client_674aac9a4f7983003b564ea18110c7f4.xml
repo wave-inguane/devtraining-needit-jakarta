@@ -16,7 +16,6 @@
 	
 }
 
-
 function myAlert(){
   g_form.addInfoMessage('<div class="modal-dialog modal-lg">'+
   '<div class="modal-content">'+
@@ -24,7 +23,7 @@ function myAlert(){
   '<h4 class="modal-title">Source Code</h4>'+
   '</div>'+
   '<div class="modal-body">'+
-  '<pre>' +'UserName : '+ g_user.userName +'</pre>'+
+  '<pre>' +'UserName : '+ "Solution Hub Lookup" +'</pre>'+
   '</div>'+
   '</div>'+
   '</div>');
@@ -264,8 +263,182 @@ function onChange(control, oldValue, newValue, isLoading, isTemplate) {
 
 
 //--------------------------------------------------------------------------
+// Table hub
 //--------------------------------------------------------------------------
 
+/*
+Table Label: Tables table of all tables
+
+Table Name: sys_db_object
+https ... /nav_to.do?uri=%2Fsys_db_object_list.do
+https ... / /
+*/
+
+/*
+==============================================================
+Usage : get field names = Column names
+        Find out: Column lable and name
+		use column name to extract the value
+		Ex: gr.column_name or gr.column_name.ref_column_name
+		
+Table Label: Dictionary Entries 
+Table Name: sys_dictionary.list
+https ... /nav_to.do?uri=%2Fsys_dictionary_list.do
+https ... /
+*/
+
+/*
+Usager: group name lookup the group members and Roles
+
+Table Label: Group  
+
+Table Name: sys_user_group.list
+https ... /nav_to.do?uri=%2Fsys_user_group_list.do
+https ... /nav_to.do?uri=%2Fsys_db_object.do%3Fsys_id%3Dsys_user_group%26sysparm_refkey%3Dname
+*/
+
+
+/*
+Table Label: 
+
+Table Name: sys_user_grmember
+https ... /nav_to.do?uri=%2Fsys_user_grmember_list.do
+https ... /
+*/
+// GET members information
+function isGroupMember(){
+	var gr = new GlideRecord('sys_user_grmember');
+	gr.addQuery('group.name','Change Management Team');
+	gr.query();
+	//gs.addErrorMessage("COUNT : " + gr.getRowCount());
+	
+	var count = 0;
+	while(gr.next() && count  < 20){
+
+		var userObj = gr.user; //get User ID
+		//var userObj = gr.user.email; //get User ID
+		//gs.addInfoMessage("User Email : " + userObj.email);
+		// Fire the event
+		//gs.eventQueue('snow_ritm_enhance_cancel_email', gr, openedByEmail, gr2.number);
+	}
+}
+
+
+/*
+Table Label: User
+
+Table Name: sys_user
+https ... /nav_to.do?uri=%2Fsys_db_object.do%3Fsys_id%3Dsys_user%26sysparm_refkey%3Dname
+https ... /
+*/
+/*
+Table Label: 
+
+Table Name: 
+https ... /
+https ... /
+*/
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*//*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
+
+/*
+Table Label: 
+
+Table Name:
+https ... /
+https ... /
+*/
 
 
 //--------------------------------------------------------------------------
@@ -348,7 +521,7 @@ Is it imperative that the tasks are generated in chronological order?
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>674aac9a4f7983003b564ea18110c7f4</sys_id>
-        <sys_mod_count>32</sys_mod_count>
+        <sys_mod_count>57</sys_mod_count>
         <sys_name>UnitTESTbuffer</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -356,7 +529,7 @@ Is it imperative that the tasks are generated in chronological order?
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_client_674aac9a4f7983003b564ea18110c7f4</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-13 17:28:57</sys_updated_on>
+        <sys_updated_on>2017-12-17 02:25:04</sys_updated_on>
         <table>x_58872_needit_needit</table>
         <type>onLoad</type>
         <ui_type>0</ui_type>

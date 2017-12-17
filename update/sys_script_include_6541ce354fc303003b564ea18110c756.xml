@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_58872_needit.dateFunctions</api_name>
+        <client_callable>true</client_callable>
+        <description/>
+        <name>dateFunctions</name>
+        <script><![CDATA[var dateFunctions = Class.create();
+dateFunctions.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+getDateDiff: function(){
+		//***************** Convert to Eastern Time and Date
+		var EastDateTime = new GlideDateTime();
+		var tz = Packages.java.util.TimeZone.getTimeZone("America/New_York");
+		EastDateTime.setTZ(tz);
+		var timeZoneOffSet = EastDateTime.getTZOffset();
+		EastDateTime.setNumericValue(EastDateTime.getNumericValue() + timeZoneOffSet);
+		var EastDate = new GlideDate();
+		EastDate.setValue(EastDateTime);
+		EastDate.getDate();
+		//*************** End Convert
+		
+		var firstDT = this.getParameter('sysparm_fdt'); //First Date-Time Field		
+		var secondDT = this.getParameter('sysparm_sdt'); // Second Date-Time Field		
+		var start = EastDate;		
+		start.setValue(firstDT);		
+		var end = EastDate;		
+		end.setValue(secondDT);		
+		var diff = gs.dateDiff(firstDT, secondDT, true);		
+		var answer = '';		
+		if (diff > 0){
+			answer = 'true';
+			
+		}
+		else{
+			answer = 'false';
+		}				
+		return answer;	
+		
+		},
+			
+		//Returns true if it is before now, and false if it is after now.
+		//params = sysparm_fdt (the first date/time field)
+		getDateTimeBeforeNowBool: function(){
+			var firstDT = this.getParameter('sysparm_fdt'); //First Date-Time Field
+			//gs.log('firstDT = ' + firstDT);
+			var diff = gs.dateDiff(firstDT, gs.nowDateTime(), true);
+			//gs.log('diff = ' + diff);
+			var answer = '';
+			if (diff >= 0){
+				answer = 'true';
+				gs.log('answer is true - diff greater than 0');
+			}
+			else {
+				answer = 'false';
+				gs.log('diff less than 0 - answer is false');
+			}
+				
+			return answer;
+		},
+	
+		verifyLessThanTwoYearsOut: function(){
+			gs.log('msh234 stepping into the Script include');
+			var firstDT = this.getParameter('sysparm_fdt'); 
+			var secondDT = this.getParameter('sysparm_sdt');
+			var diff = '';
+			if(secondDT == ''){
+				diff = gs.dateDiff(firstDT, gs.nowDateTime(), true);
+			}
+			else{
+				diff = gs.dateDiff(firstDT, secondDT, true);
+			}
+			var answer = 'default';
+			if (diff >= -63036051){  // anything less than two years out is ok
+				answer = 'true';
+				//gs.log('answer is true - less than 2 years out');
+			}
+			else {
+				answer = 'false';
+				//gs.log('answer is false - more than 2 years out');
+			}
+				
+			return answer;
+		},
+    type: 'dateFunctions'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 01:17:16</sys_created_on>
+        <sys_id>6541ce354fc303003b564ea18110c756</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>dateFunctions</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_6541ce354fc303003b564ea18110c756</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 01:17:16</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description>This script locates all INC records that are in the 'Closed', 'Cancelled' or 'Cancelled-Converted' state that are showing active=true and marks them as active=false.</description>
+        <flush_cache>false</flush_cache>
+        <name>Mass Update</name>
+        <run_once>true</run_once>
+        <script><![CDATA[var inc = new GlideRecord('incident');
+inc.addEncodedQuery('state=8^ORstate=9^ORstate=7^active=true');
+inc.query();
+while(inc.next()){
+	inc.work_notes = 'This record is being updated by an automated script to mark it as inactive due to the current state value.';
+	inc.active=false;
+	inc.update();	
+}]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-16 05:18:40</sys_created_on>
+        <sys_id>2c98f2f14f4703003b564ea18110c709</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Mass Update</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_2c98f2f14f4703003b564ea18110c709</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-16 05:18:40</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

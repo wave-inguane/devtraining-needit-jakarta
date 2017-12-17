@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>false</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>sys_whitelist_package</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>CallTypeChanged</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	// Add your code here
+var ctype = current.call_type;
+
+if (ctype != 'hang_up' && ctype != 'wrong_number' && ctype != 'status_call' && ctype != 'general_inquiry' && ctype != 'sc_request'){
+	var gr = new GlideRecord(ctype);
+	gr.short_description = current.short_description;
+	gr.description = current.description.getHTMLValue();
+	gr.contact_type = current.contact_type;
+	gr.company = current.company;
+	gr.opened_by = current.opened_by;
+
+	// update taks work notes
+	var callerName = current.caller.name;
+	var taskType = current.call_type.getDisplayValue();
+	var currentLink = "[code]<a href='" + current.getLink() + "'>" + current.number + "</a>[/code]";
+	var journalEntry = gs.getMessage("This {0} was raised on behalf of {1} from {2}", [taskType, callerName, currentLink]);
+	gr.work_notes = journalEntry;
+
+	if (GlidePluginManager.isRegistered('com.glide.domain'))
+		gr.sys_domain = getDomain();
+	
+	if (ctype == 'incident'){
+		gr.caller_id = current.caller;
+		gr.u_affected_user = current.caller;
+		gr.u_on_behalf_of = current.u_on_behalf_of;
+		gr.location = current.caller.location;
+// 19Aug16 - code to handle telework, etc
+                if (current.u_telework_in_office == 'Telework') {
+                   gr.u_telework = true;
+                } else {
+                   gr.u_telework = false;
+                }
+                gr.u_site_code = current.u_site_code;
+                gr.u_cube_number = current.u_floor_cube;
+                gr.u_phone_number = current.u_phone_number;
+
+		gr.comments = current.description.getHTMLValue();
+		// 9June16 - story 337 - set new description_from_call field here
+		gr.u_description_from_call = current.description.getHTMLValue();
+	}
+	
+	if (ctype == 'change_request'){
+		gr.requested_by = current.caller;
+	}
+	
+	var sysID = gr.insert();
+	current.transferred_to = sysID;
+	if (ctype != 'incident') {
+		var url = ctype + '.do?sys_id=' + sysID;
+		gs.addInfoMessage(current.number + gs.getMessage(" transferred to ") + ":  <a href='" + url + "'>" + current.transferred_to.getDisplayValue() + "</a>");
+	}		
+}
+
+function getDomain(){
+	// only set the domain if the caller has a domain that is not global
+	if (JSUtil.notNil(current.caller) && JSUtil.notNil(current.caller.sys_domain) && current.caller.sys_domain.getDisplayValue() != 'global') 
+		return current.caller.sys_domain;
+	else
+		return getDefaultDomain();
+}
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-15 23:38:47</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>e18aa9714fc303003b564ea18110c73e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>CallTypeChanged</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_e18aa9714fc303003b564ea18110c73e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-15 23:38:47</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=e18aa9714fc303003b564ea18110c73e"/>
+</record_update>

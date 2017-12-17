@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>sys_attachment</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>MDO Attachment copy RITM to REQ</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	// Add your code here
+	onAsync(current);
+})(current, previous);
+
+function onAsync(current) {
+   //This function will be automatically called when this rule is processed.
+	if (current.table_name == 'sc_req_item'){
+		gs.sleep(5000); // wait 5 seconds to allow other functions to copy the attachment first
+		var ritm = new GlideRecord('sc_req_item');
+		ritm.addQuery('sys_id', current.table_sys_id);
+		ritm.query();
+		if(ritm.next()){
+			gs.log('ritm.next() found a record', 'BR: MDO attachment copy');
+			
+			var reqCI = new GlideRecord('cmdb_ci');
+			reqCI.addQuery('name', 'MDO Hardware Services');
+			reqCI.query();
+			reqCI.next();
+			
+			var req = new GlideRecord('sc_request');
+			req.addQuery('sys_id', ritm.request);
+			req.addQuery('cmdb_ci', reqCI.sys_id);
+			req.query();
+			if(req.next()){
+				gs.log('req.next() found a record', 'BR: MDO attachment copy');
+				// need to search the attachment table to see if this attachment is already present for the request.  
+				var reqAttach = new GlideRecord('sys_attachment');
+				reqAttach.addQuery('table_name', 'sc_request');
+				reqAttach.addQuery('table_sys_id', req.sys_id);
+				reqAttach.addQuery('file_name', current.file_name);
+				reqAttach.addQuery('size_bytes', current.size_bytes);
+				reqAttach.query();
+				if (reqAttach.next()){
+					//match found - no action needed	
+					gs.log('Match found - no action needed', 'BR: MDO attachment copy');
+				}
+				else{
+					// file has not yet been copied up to the REQ level, need to copy it there.	
+					gs.log('Match not found - copy action needed', 'BR: MDO attachment copy');
+					GlideSysAttachment.copy('sc_req_item', ritm.sys_id, 'sc_request', req.sys_id);
+					
+					
+					var gr = new GlideRecord('sys_attachment');
+					gr.addQuery('table_name', 'LIKE', 'sc_request');
+					gr.orderBy('table_sys_id');
+					gr.addQuery('table_sys_id', req.sys_id);
+					gr.orderByDesc('sys_created_on');
+					gr.query();
+					var lastID = 'not_a_match';
+					var lastFile = 'not_a_match';
+					while (gr.next()) {
+						var isDuplicate = (lastID == gr.table_sys_id) && (lastFile == gr.file_name);
+						lastID = gr.table_sys_id;
+						lastFile = gr.file_name;
+						gs.log(gr.table_sys_id + ' ' + gr.table_name + ' ' + gr.file_name + ' ' + gr.sys_created_on + ' ' + isDuplicate, 'BR: MDO attachment copy');
+						if (isDuplicate){		
+							gr.deleteRecord();
+						}
+					}
+				}
+			}
+		}
+	}
+}]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-15 23:18:33</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>4755ed314fc303003b564ea18110c74b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>MDO Attachment copy RITM to REQ</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_4755ed314fc303003b564ea18110c74b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-15 23:20:23</sys_updated_on>
+        <template/>
+        <when>async</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=4755ed314fc303003b564ea18110c74b"/>
+</record_update>

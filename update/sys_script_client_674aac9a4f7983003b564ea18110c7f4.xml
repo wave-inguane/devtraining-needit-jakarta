@@ -495,10 +495,10 @@ https ... /
 
 /*
 ========================================================================================
-Table Label: 
+Table Label: Service Portal Designer
 
 Table Name:
-https ... /
+https ... /$spd.do#/portal/select
 https ... /
 */
 
@@ -677,7 +677,7 @@ Is it imperative that the tasks are generated in chronological order?
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>674aac9a4f7983003b564ea18110c7f4</sys_id>
-        <sys_mod_count>72</sys_mod_count>
+        <sys_mod_count>73</sys_mod_count>
         <sys_name>UnitTESTbuffer</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -685,7 +685,7 @@ Is it imperative that the tasks are generated in chronological order?
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_client_674aac9a4f7983003b564ea18110c7f4</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-17 19:17:51</sys_updated_on>
+        <sys_updated_on>2017-12-17 21:24:44</sys_updated_on>
         <table>x_58872_needit_needit</table>
         <type>onLoad</type>
         <ui_type>0</ui_type>

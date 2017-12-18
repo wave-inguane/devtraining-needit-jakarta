@@ -504,10 +504,37 @@ https ... /
 
 /*
 ========================================================================================
-Table Label: 
+Table Label: Emails
+
+Table Name: sys_email
+https ... /nav_to.do?uri=%2Fsys_email_list.do%3Fsysparm_userpref_module%3D8d620b63c611227b008368697b0b8d7b%26sysparm_query%3Dsys_created_onONToday@javascript:gs.daysAgoStart(0)@javascript:gs.daysAgoEnd(0)%5EEQ%26sysparm_clear_stack%3Dtrue%26sysparm_clear_stack%3Dtrue
+https ... /
+*/
+
+/*
+========================================================================================
+Table Label: Update Sets
+
+Table Name: sys_update_set
+https ... /nav_to.do?uri=%2Fsys_update_set_list.do%3Fsysparm_userpref_module%3D50047c06c0a8016c0135a14cebc8191b%26sysparm_clear_stack%3Dtrue
+https ... /
+*/
+
+/*
+========================================================================================
+Table Label: Creating Custom Widget Objectives Service Portal
 
 Table Name:
+https ... /app.do#!/training/article/app_store_learnv2_serviceportal_jakarta_creating_custom_widgets/app_store_learnv2_serviceportal_jakarta_creating_custom_widget_objectives?v=jakarta
 https ... /
+*/
+
+/*
+========================================================================================
+Table Label: Service Portal Pages
+
+Table Name: sp_page
+https ... /nav_to.do?uri=%2Fsp_page_list.do%3Fsysparm_first_row%3D1%26sysparm_query%3DGOTOid%253E%253Dmy_hello_world_1%26sysparm_query_encoded%3DGOTOid%253E%253Dmy_hello_world_1%26sysparm_view%3D
 https ... /
 */
 
@@ -549,47 +576,41 @@ https ... /
 
 /*
 ========================================================================================
-Table Label: 
+Table Label: Log debugger
 
-Table Name:
-https ... /
+Table Name: syslog_list
+https ... /https://dev25300.service-now.com/nav_to.do?uri=%2Fsyslog_list.do%3Fsysparm_query%3D%26sysparm_first_row%3D1%26sysparm_view%3D
 https ... /
 */
 
 /*
 ========================================================================================
-Table Label: 
+Table Label: Debug Portal
 
 Table Name:
-https ... /
-https ... /
-*/
+https ... /app.do#!/training/article/app_store_learnv2_serviceportal_jakarta_creating_custom_widgets/app_store_learnv2_serviceportal_jakarta_debugging_widgets?v=jakarta
+https ... /app.do#!/training/article/app_store_learnv2_serviceportal_jakarta_creating_custom_widgets/app_store_learnv2_serviceportal_jakarta_creating_custom_widget_objectives?v=jakarta
 
-/*
-========================================================================================
-Table Label: 
+Creating Custom Widget Objectives
+In this module you will learn to:
 
-Table Name:
-https ... /
-https ... /
-*/
-
-/*
-========================================================================================
-Table Label: 
-
-Table Name:
-https ... /
-https ... /
-*/
-
-/*
-========================================================================================
-Table Label: 
-
-Table Name:
-https ... /
-https ... /
+Clone baseline widgets
+Write widget logic
+HTML Template
+Client Script
+Server Script
+Test Widgets
+Preview
+Test Page
+JavaScript Console
+Use the Widget APIs
+Use the widget global objects
+data
+input
+options
+Create and use directives
+Define and use widget options
+Respond to record changes which occur outside of Service Portal
 */
 
 
@@ -670,6 +691,25 @@ I was able to get the workflow to auto-generate the tasks in chronological order
 Is it imperative that the tasks are generated in chronological order?
 */
 //--------------------------------------------------------------------------
+
+
+//==================================================================================================
+/*
+Got to thinking about this and wanted to touch base to get some input from you. 
+
+What happens when a Change Request (and corresponding task) are created with only 4 days until the planned end date?  SLA timers are fixed, in this case it will always be 9 calendar days (I think you wanted this down to 7, but either way it is fixed once we set it) so if the SLA starts with 4 days until the Planned End Date, the SLA timer will allow 9 days until it runs out of time and SLA is missed.
+
+I have a couple potential ways to dynamically adjust this as we go but I am not really sure if it will work and it certainly will make reporting a challenge.  
+
+With that in mind, do we just want to allow a straight 7 days regardless of how soon the planned end date is?  I can still use the nightly scheduled job to check for any Change Tasks that recently passed into the 7 day timer, but it won't be as graceful holding shorting timers to the exact planned end date.  
+
+Not sure what percentage of these changes would even be setup closer than 7 days to the planned end date so I might be making this a bigger deal than it is but I wanted to consider it before we proceed much further as it significantly impacts the direction I take with how this will work.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+*/
+
 ]]></script>
         <sys_class_name>sys_script_client</sys_class_name>
         <sys_created_by>admin</sys_created_by>
@@ -677,7 +717,7 @@ Is it imperative that the tasks are generated in chronological order?
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>674aac9a4f7983003b564ea18110c7f4</sys_id>
-        <sys_mod_count>73</sys_mod_count>
+        <sys_mod_count>83</sys_mod_count>
         <sys_name>UnitTESTbuffer</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -685,7 +725,7 @@ Is it imperative that the tasks are generated in chronological order?
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_client_674aac9a4f7983003b564ea18110c7f4</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-17 21:24:44</sys_updated_on>
+        <sys_updated_on>2017-12-18 22:10:56</sys_updated_on>
         <table>x_58872_needit_needit</table>
         <type>onLoad</type>
         <ui_type>0</ui_type>

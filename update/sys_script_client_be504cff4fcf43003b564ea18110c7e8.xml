@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>active</field>
+        <global>true</global>
+        <messages/>
+        <name>Display session expiration popup dialog</name>
+        <order/>
+        <script><![CDATA[function onLoad() {
+	
+	var session_dialog_info = {};
+	session_dialog_info.cookie_name = "dialog_tracker";
+	
+	var ga = new GlideAjax("AjaxSessionExtender");
+	ga.addParam("sysparm_name", "initialData");
+	ga.getXML(initialDataProcessing);
+	
+	function initialDataProcessing(response)
+	{
+		var data = response.responseXML.getElementsByTagName("data");
+		var user = response.responseXML.getElementsByTagName("user");
+		
+		session_dialog_info.is_itil_user  = (user[0].getAttribute("has_itil_role") == "true");
+		//g_form.addInfoMessage("hasRole ... "+ session_dialog_info.is_itil_user);
+		
+		session_dialog_info.dialog_active = (data[0].getAttribute("dialog_enabled") == "true");
+		//g_form.addInfoMessage("isActive ... "+ session_dialog_info.dialog_active);
+		
+		session_dialog_info.raw_dialog_text = data[0].getAttribute("dialog_text");
+		//g_form.addInfoMessage("deQueue : ... "+ 	session_dialog_info.raw_dialog_text);
+		
+		session_dialog_info.getDialogText = function(){ 
+			//g_form.addInfoMessage("Invoked : "+ this);
+			return  this.raw_dialog_text.replace(/\${expiration-timestamp}/, this.getExpireTime().toLocaleTimeString());
+		};
+		//in seconds
+		session_dialog_info.full_timeout  = parseInt(data[0].getAttribute("session_timeout"), 10) * 60;
+		session_dialog_info.dialog_offset = parseInt(data[0].getAttribute("dialog_offset"), 10);
+		session_dialog_info.dialog_delay  = session_dialog_info.full_timeout + session_dialog_info.dialog_offset;
+		session_dialog_info.dialog_timestamp_offset = session_dialog_info.dialog_delay - 30;
+		
+		//in milliseconds
+		session_dialog_info.expire_time = 0;
+		session_dialog_info.setExpireTime = function(){
+			this.expire_time = new Date().getTime() + (this.full_timeout * 1000);
+		};
+		session_dialog_info.getExpireTime = function(){
+			return new Date(this.expire_time); 
+		};
+		
+		session_dialog_info.getDialogDelay = function(){
+			return this.dialog_delay * 1000;
+		};
+		
+		session_dialog_info.getCookieExpiration = function(){ 
+			return new Date().getTime() + (this.dialog_timestamp_offset * 1000); 
+		};
+		//cookie functions
+		session_dialog_info.setCookie = function(){
+			document.cookie = this.cookie_name + "=" + this.getCookieExpiration().toString();
+		};
+		session_dialog_info.getCookieValue = function(){
+			var get_cookie_name = this.cookie_name + "=";
+			
+			var raw_cookies = decodeURIComponent(document.cookie);
+			var cookie_list = raw_cookies.split(";");
+			for(var i = 0; i < cookie_list.length; i++) {
+				var cookie = cookie_list[i];
+				//remove leading space if it exists
+				while (cookie.charAt(0) == ' ') {
+					cookie = cookie.substring(1);
+				}
+				if (cookie.indexOf(get_cookie_name) == 0) {
+					return cookie.substring(get_cookie_name.length, cookie.length);
+				}
+			}
+			return "";
+		};
+		
+		if(session_dialog_info.dialog_active)
+		{
+			//set cookie
+			session_dialog_info.setCookie();
+			session_dialog_info.setExpireTime();
+			session_dialog_info.dialog_handle = setTimeout(displayNotification, session_dialog_info.getDialogDelay());
+		}
+	}
+		
+	
+	function displayNotification()
+	{
+		var raw_cookie_value = session_dialog_info.getCookieValue();
+		if(raw_cookie_value == "")
+			raw_cookie_value = 0;
+		
+		var cookie_date = parseInt(raw_cookie_value, 10);
+		
+		if(cookie_date <= new Date().getTime())
+		{
+			if(confirm(session_dialog_info.getDialogText()))
+			{
+				session_dialog_info.setExpireTime();
+				
+				//bump session expiration forward in SNOW
+				var ga = new GlideAjax("AjaxSessionExtender");
+				ga.addParam("sysparm_name", "extendSession");
+				ga.getXML();
+				
+				//bump session expiration forward in cookie
+				session_dialog_info.setCookie();
+				
+				session_dialog_info.dialog_handle = setTimeout(displayNotification, session_dialog_info.getDialogDelay());
+			}
+		}
+	}
+	g_form.addInfoMessage("Loading ... exit");
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-21 21:10:17</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>be504cff4fcf43003b564ea18110c7e8</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>Display session expiration popup dialog</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_client_be504cff4fcf43003b564ea18110c7e8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-21 22:27:46</sys_updated_on>
+        <table>x_58872_needit_needit</table>
+        <type>onLoad</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

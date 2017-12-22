@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>text that will show on the popup to users when they've been inactive for a certain period of time.&#13;
+This text should tell them that they need to click ok to prevent their session from expiring and that if their session expires they can lose their work.&#13;
+Include the tag ${expiration-timestamp} to display when the user's session will expire in their local time.</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_58872_needit.glide.ui.session_timeout_dialog_text</name>
+        <read_roles/>
+        <suffix>glide.ui.session_timeout_dialog_text</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-12-21 20:46:33</sys_created_on>
+        <sys_id>7bbc73af4fcf43003b564ea18110c7c6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_58872_needit.glide.ui.session_timeout_dialog_text</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_properties_7bbc73af4fcf43003b564ea18110c7c6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-12-21 20:46:33</sys_updated_on>
+        <type>string</type>
+        <value>POPUP : Your session is about to end due to inactivity. Click OK to continue this session. If you click Cancel or take no action your session will automatically expire at ${expiration-timestamp}.</value>
+        <write_roles/>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=7bbc73af4fcf43003b564ea18110c7c6"/>
+</record_update>

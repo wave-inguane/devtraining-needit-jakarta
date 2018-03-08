@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>false</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>incident</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>STRY2572905</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	
+	//TAKE 1
+	// Add your code here
+	var answer = false;
+	var userID = current.user.toString();
+	var isMe = gs.getUserID() == userID;
+	var isGlobal = userID == "GLOBAL";
+	if (isMe || gs.hasRole('report_admin'))
+		answer = true;
+	else if (isGlobal)
+		answer = gs.hasRole('report_global');
+	else if (isGroup())
+		answer = gs.hasRole('report_group');
+	
+	
+	function isGroup(){
+		var reportUserId = current.user.toString();
+		if (reportUserId != "group"){
+			return false;
+		}
+		var grpList = gs.getUser().getMyGroups();
+		var myGrps = '';
+		for (var i = 0; i != grpList.size(); i++) {
+			if (i != 0) myGrps += ',';
+			myGrps += grpList.get(i);
+		}
+		var myUserId = gs.getUserID();
+		var gr = new GlideRecord('sys_report_users_groups');
+		gr.addQuery('report_id', current.getUniqueValue());
+		var qc = gr.addQuery('user_id', myUserId);
+		if (myGrps != '')
+			qc.addOrCondition('group_id', 'IN', myGrps);
+		gr.query();
+		if (gr.getRowCount() > 0)
+			return true;
+		return false;
+	}
+
+	
+	// TAKE 2
+	if (!gs.hasRole("admin") && !gs.hasRole("groups_admin") && gs.getSession().isInteractive()) {
+		var qc = current.addQuery("u_hidden", "!=", "true"); //cannot see hidden groups...
+		qc.addOrCondition("sys_id", "javascript:getMyGroups()"); //...unless in the hidden group
+	}
+
+	
+	
+	
+	
+	
+	
+	
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-03-04 21:33:20</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>117340534f2453003b564ea18110c7ba</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>STRY2572905</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_117340534f2453003b564ea18110c7ba</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-04 21:42:41</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=117340534f2453003b564ea18110c7ba"/>
+</record_update>

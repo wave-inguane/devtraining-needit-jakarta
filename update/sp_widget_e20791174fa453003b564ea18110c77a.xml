@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <client_script><![CDATA[function() {
+  /* widget controller */
+  var c = this;
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description>Groups And Roles</description>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>groups-and-roles</id>
+        <internal>false</internal>
+        <link/>
+        <name>Groups And Roles</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	/* populate the 'data' object */
+	/* e.g., data.table = $sp.getValue('table'); */
+
+   var isInternalUser = gs.hasRole('u_smart_role');
+   var isAdmin = gs.hasRole('admin');
+	if (!gs.hasRole("admin") && !gs.hasRole("groups_admin") && gs.getSession().isInteractive()){
+		
+		//Determines if the current user has the specified role within a specified group.
+		var group = new GlideRecord('sys_user_group');
+		group.addQuery('name', 'SMART Internal Users');
+		group.setLimit(1);
+		group.query();
+		if (group.next()) {
+			if (gs.hasRoleInGroup('u_smart_role', group)) {
+				gs.addInfoMessage('User has role in group');
+			} else {
+				gs.addInfoMessage('User does NOT have role in group');
+			}
+		}
+		
+	}
+
+	
+	if (!gs.hasRole('admin') && gs.isInteractive()) {
+		var qc1 = current.addQuery('u_group', '');
+		var gra = new GlideRecord('sys_user_grmember');
+		gra.addQuery('user', gs.getUserID());
+		gra.query();
+		while (gra.next()) {
+			qc1.addOrCondition('u_group', gra.group);
+		}
+	}
+
+	if (!gs.hasRole("admin") && gs.getSession().isInteractive()) {
+		var qc1 = current.addQuery('u_group',"");
+		qc1.addOrCondition('u_group', "javascript:getMyGroups()");
+	}
+
+	
+})();
+
+/*
+group member who has the least amount of active
+incidents.
+*/
+var assignTo = getLowestUser();
+gs.addInfoMessage("assigning to is " + assignTo);
+current.assigned_to = assignTo;
+function getLowestUser() {
+	var userList = [];
+	var cg = new GlideRecord('sys_user_grmember');
+	cg.addQuery('group', current.assignment_group);
+	cg.query();
+	while(cg.next()) {
+		var tech = cg.user.toString();
+		var cnt = countTickets(tech);
+		gs.addInfoMessage("Tech counts " + cg.user.name + ' ' + cnt + "
+											" + tech);
+											userList.push( { sys_id: tech, name: cg.user.name, count: cnt }
+										 );
+	}
+	for(var i=0; i < userList.length; i++) {
+		gs.addInfoMessage(userList[i].sys_id + " " + userList[i].name +
+											" " + userList[i].count);
+	}
+	userList.sort(function(a, b) {
+		gs.addInfoMessage("Sorting: " + a.sys_id + "(" + a.count + ");
+											" + b.sys_id + "(" + b.count + ")");
+		return a.count - b.count; });
+	if (userList.length <= 0)
+		return "";
+	return userList[0].sys_id;
+}
+function countTickets(tech){
+	var ct = new GlideRecord('incident');
+	ct.addQuery('assigned_to',tech);
+	ct.addQuery('active',true);
+	ct.query();
+	return ct.getRowCount();
+}]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-03-05 03:37:30</sys_created_on>
+        <sys_id>e20791174fa453003b564ea18110c77a</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>Groups And Roles</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sp_widget_e20791174fa453003b564ea18110c77a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-05 05:38:08</sys_updated_on>
+        <template><![CDATA[<div>
+<!-- your widget template -->
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>false</active>
+        <api_name>x_58872_needit.STRY2572905</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>STRY2572905</name>
+        <script><![CDATA[var STRY2572905 = Class.create();
+STRY2572905.prototype = {
+	initialize: function() {
+	},
+
+	/*
+	exclude a specific role from having access to filters/breadcrumbs
+	Users with the role "newrole" will not have access
+	*/
+	exclude : function incidentDisplayFilter() {
+		if (gs.getUser().hasRoles() && !gs.hasRole("newrole")) {
+			answer = true;
+		} else {
+			answer = false;
+		}
+		if (gs.hasRole("admin")) {
+			answer = true;
+		}
+	},
+
+	type: 'STRY2572905'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-03-04 21:30:47</sys_created_on>
+        <sys_id>ad5288134f2453003b564ea18110c70a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>STRY2572905</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_ad5288134f2453003b564ea18110c70a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-04 21:30:47</sys_updated_on>
+    </sys_script_include>
+</record_update>

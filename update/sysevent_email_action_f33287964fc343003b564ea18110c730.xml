@@ -6,7 +6,7 @@
         <active>false</active>
         <advanced_condition/>
         <affected_field_on_event/>
-        <category display_value="Uncategorized">c97d83137f4432005f58108c3ffa917a</category>
+        <category display_value="Uncategorized" name="Uncategorized">c97d83137f4432005f58108c3ffa917a</category>
         <collection>sc_task</collection>
         <condition table="sc_task">assigned_toISEMPTY^assignment_groupVALCHANGES^ORwork_startVALCHANGES^EQ<item endquery="false" field="assigned_to" goto="false" newquery="false" operator="ISEMPTY" or="false" value=""/>
             <item endquery="false" field="assignment_group" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>

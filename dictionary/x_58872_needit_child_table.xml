@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element extends="x_58872_needit_parent_table" label="Child Table" max_length="40" name="x_58872_needit_child_table" type="collection"/>
+</database>

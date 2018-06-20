@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>false</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection/>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>FTR</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	// Add your code here
+	
+
+})(current, previous);
+
+
+function onAfter(current, previous) {
+	gs.addInfoMessage(current.type + ' - ' + current.target_name + ' - added to update set: ' + current.update_set.name); 
+}
+
+
+
+
+function isGroupMember(){
+	var gr = new GlideRecord('sys_user_grmember');
+	gr.addQuery('group.name','Change Management Team');
+	gr.query();
+	
+	gs.addErrorMessage("COUNT : " + gr.getRowCount());
+	gs.addInfoMessage("Members of the Change Management Team who have been assigned a TASK ( change_task )");
+	var count = 0;
+	while(gr.next() && count  < 20){
+		var userObj = gr.user; //get User ID
+		//gs.addInfoMessage("User Email : " + userObj.email);
+
+		//
+		// "Members of the Change Management Team who have been assigned a TASK ( change_task )"
+		//
+		var grCT = new GlideRecord('change_task');
+		grCT.addQuery('assigned_to',userObj);
+		grCT.query();
+
+		if(grCT.next()){
+			gs.addInfoMessage(grCT.getRowCount() +" - CTASK " +" Assigned To "+ userObj.first_name+" "+userObj.last_name);
+			//gs.addInfoMessage("CTASK : " + userObj.email);
+			/*
+			if(Emergency (Regular) Firewall and Network Changes move to the Implementation Phase.){
+				// fire email notification event
+			}
+			*/
+		}
+	}
+}
+
+function getFieldValuePairs(tableName){
+	// Add your code here
+	var table_name = tableName;
+	var gr = new GlideRecord(table_name);
+	gr.initialize();
+
+	gs.addInfoMessage("Table Name : " +gr.getTableName());
+
+	for(var f in gr)
+		gs.addInfoMessage(f + " : "+ gr[f]);
+}
+
+
+function x(){
+	/*
+	if(current.opened_by.user_name == 'avinguan' && current.state == 1){
+		////getFieldValuePairs(current.sys_class_name);
+
+		var gr = new GlideRecord('incident');
+		gr.addQuery('sys_updated_by','avinguan');
+		gr.addQuery('state', 1);
+		gr.query();
+		var total = gr.getRowCount();
+		gs.addErrorMessage("ROW COUNT : " + total);//avinguan
+
+		var count = 0;
+		if(gr.next() && count < 1){
+			var deleted = gr.getValue('sys_updated_by');
+			gs.addErrorMessage("Found : " + deleted);//avinguan
+			//gr.deleteRecord();
+			//gr.deleteMultiple();
+			gs.addErrorMessage("Deleted : " + deleted +" --- "+ gr.getValue('number'));//avinguan
+			count++;
+		}
+
+	}
+	else
+		gs.addInfoMessage("Not Onpend_by : " + current.opened_by.user_name);//avinguan
+	*/
+
+	//if(current.opened_by.user_name == 'avinguan' && current.state == 1)//sys_updated_by
+	if(current.sys_updated_by == 'avinguan' && current.state == 1)//sys_updated_by
+		getFieldValuePairs("sys_attachment");
+}
+
+/*
+https://dhsuscisdev.service-now.com/nav_to.do?uri=%2Fchange_task.do%3Fsys_id%3Daddd1f88dbda7a00ee37740d0f9619c3%26sysparm_record_target%3Dchange_task%26sysparm_record_row%3D1%26sysparm_record_rows%3D660%26sysparm_record_list%3Dassignment_group.nameCONTAINSChange%2BM%255EORDERBYassignment_group
+*/
+
+
+//----------------------------------------------------------------------------
+// Script Include Primer SNLab page: 658
+//----------------------------------------------------------------------------
+//Server
+/*
+var AjaxDurCalc = Class.create();
+AjaxDurCalc.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+durCalc: function() {
+return
+gs.dateDiff(this.getParameter('sysparm_strt'),this.getParameter('sysparm_end'),
+false);
+}
+});
+*/
+
+//Client
+/*
+function onChange(control, oldValue, newValue, isLoading) {
+var strt = g_form.getValue('<start_field>');
+var end = g_form.getValue('<end_field>');
+var ajax = new GlideAjax('AjaxDurCalc');
+ajax.addParam('sysparm_name','durCalc');
+ajax.addParam('sysparm_strt',strt);
+ajax.addParam('sysparm_end',end);
+ajax.getXMLWait();
+var answer = ajax.getAnswer();
+g_form.setValue('<duration_field>', answer);
+}
+*/
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-05-11 11:59:19</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>504c40054f0213003b564ea18110c766</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>FTR</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_504c40054f0213003b564ea18110c766</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-05-11 12:10:39</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=504c40054f0213003b564ea18110c766"/>
+</record_update>

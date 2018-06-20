@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <before>false</before>
+        <description>UnitTEST</description>
+        <flush_cache>false</flush_cache>
+        <name>UnitTEST</name>
+        <run_once>true</run_once>
+        <script><![CDATA[// Group the user role records by user/role combo
+var userRoleGA = new GlideAggregate('sys_user_has_role');
+userRoleGA.groupBy('user');
+userRoleGA.groupBy('role');
+userRoleGA.query();
+
+var userRoleGR;
+while (userRoleGA.next()) {
+	
+	gs.addInfoMessage('User : '+ userRoleGA.user.name +" ROLE: "+ userRoleGA.role.name);
+	
+	/*
+	// Fetch the records for this user/role pair
+	userRoleGR = new GlideRecord('sys_user_has_role');
+	userRoleGR.addQuery('user', userRoleGA.user);
+	userRoleGR.addQuery('role', userRoleGA.role);
+	userRoleGR.query();
+	userRoleGR.next(); // Skip the first result
+	*/
+
+	/*
+	while (userRoleGR.next()) { // delete the rest
+		userRoleGR.deleteRecord();
+	}
+	*/
+}
+]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>avelino.inguane</sys_created_by>
+        <sys_created_on>2018-04-25 02:50:16</sys_created_on>
+        <sys_id>147573eb4f6d13003b564ea18110c738</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>UnitTEST</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_fix_147573eb4f6d13003b564ea18110c738</sys_update_name>
+        <sys_updated_by>avelino.inguane</sys_updated_by>
+        <sys_updated_on>2018-04-25 03:05:32</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

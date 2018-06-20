@@ -52,15 +52,15 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-03-07 06:51:10</sys_created_on>
-        <sys_id>d7a698c84fb413003b564ea18110c706</sys_id>
+        <sys_id>2b1bd5cb4fcd13003b564ea18110c7cc</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>x_58872_needit_child_table</sys_name>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
         <sys_policy/>
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
-        <sys_update_name>sys_dictionary_x_58872_needit_child_table_null</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-03-07 06:51:10</sys_updated_on>
+        <sys_update_name>sys_dictionary_x_58872_needit_child_table_NULL</sys_update_name>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2018-03-29 05:47:41</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="pa_tabs">
+    <pa_tabs action="INSERT_OR_UPDATE">
+        <canvas_page display_value="PA New Tab">d3752b854fed53003b564ea18110c7d3</canvas_page>
+        <name>TestTab 1</name>
+        <page display_value="PA TestTab 1">97752b854fed53003b564ea18110c7d2</page>
+        <sys_class_name>pa_tabs</sys_class_name>
+        <sys_created_by>avelino.inguane</sys_created_by>
+        <sys_created_on>2018-04-17 07:15:46</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>db752b854fed53003b564ea18110c7d5</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>TestTab 1</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>pa_tabs_db752b854fed53003b564ea18110c7d5</sys_update_name>
+        <sys_updated_by>avelino.inguane</sys_updated_by>
+        <sys_updated_on>2018-04-18 22:21:00</sys_updated_on>
+    </pa_tabs>
+</record_update>
